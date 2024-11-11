@@ -1,0 +1,33 @@
+.table-wrapper {
+  width: calc(100% - 250px);
+  overflow-x: auto;
+}
+table {
+  /*  min-width: 1500px;*/
+  width: 80%;
+  padding: 10px;
+  max-height: 80vh;
+  border-collapse: collapse;
+  overflow-y: auto;
+  overflow-x: auto;
+  margin: 0 auto;
+  text-align: center;
+  position: fixed;
+  top: 180px;
+  left: 250px;
+  z-index: 400;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f4f4;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

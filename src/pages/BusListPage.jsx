@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./listPages.css";
 export default function BusListPage() {
   return (
