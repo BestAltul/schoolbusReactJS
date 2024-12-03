@@ -13,10 +13,10 @@ export default function BusListComponent() {
     { id: 4, description: "515", done: false, targetDate: targetDate },
   ];
   return (
-    <div className="BusListComponent">
+    <div className="container">
       <h1>List of buses</h1>
       <div>
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <td>ID</td>
