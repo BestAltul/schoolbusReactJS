@@ -23,6 +23,7 @@ export default function BusListComponent() {
               <td>Description</td>
               <td>Is done</td>
               <td>Target date</td>
+              <td>Delete</td>
             </tr>
           </thead>
           <tbody>
@@ -32,6 +33,9 @@ export default function BusListComponent() {
                 <td>{element.description}</td>
                 <td>{element.done.toString()}</td>
                 <td>{element.targetDate.toDateString()}</td>
+                <td>
+                  <button className="btn btn-warning">Delete</button>
+                </td>
               </tr>
             ))}
           </tbody>

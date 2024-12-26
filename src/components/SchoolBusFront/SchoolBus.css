@@ -1,6 +1,32 @@
 label,
 input,
+.SchoolBus {
+  width: 90%;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  /* position: fixed; */
+}
+.WelcomeComponent {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: fixed;
+}
 button {
   margin: 10px;
   padding: 5px;
+}
+header {
+  top: 0;
+  padding-bottom: 20px;
+  /* position: absolute; */
+  width: 90%;
+  /* height: 40px; */
+}
+
+footer {
+  bottom: 0;
+  position: absolute;
+  width: 90%;
+  height: 40px;
 }
