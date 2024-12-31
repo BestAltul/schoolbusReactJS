@@ -1,4 +1,5 @@
 import React from "react";
+import { Table, Form } from "react-bootstrap";
 import "./BusTable.css";
 
 const BusTable = ({ buses }) => {
