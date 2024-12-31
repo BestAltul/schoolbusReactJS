@@ -7,6 +7,9 @@ export default function WelcomeComponent() {
       <div>
         Manage your bus list -<Link to="/bus_list">Go here</Link>
       </div>
+      <div>
+        Manage your camera list -<Link to="/camera_list">Go here</Link>
+      </div>
     </div>
   );
 }

@@ -3,6 +3,8 @@ import LogoutComponent from "./LogoutComponent";
 import WelcomeComponent from "./WelcomeComponent";
 import ErrorComponent from "./ErrorComponent";
 import BusListComponent from "./BusListComponent";
+import CameraListComponent from "./DashCameraComponent";
+import EditBusComppnent from "./EditBusComponent";
 import "./SchoolBus.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import HeaderComponent from "./HeaderComponent";
@@ -45,10 +47,26 @@ export default function SchoolBus() {
               }
             />
             <Route
+              path="/camera_list"
+              element={
+                <AuthenticatedRoute>
+                  <CameraListComponent />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
               path="/logout"
               element={
                 <AuthenticatedRoute>
                   <LogoutComponent />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/edit_bus"
+              element={
+                <AuthenticatedRoute>
+                  <EditBusComppnent />
                 </AuthenticatedRoute>
               }
             />

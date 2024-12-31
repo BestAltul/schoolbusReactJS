@@ -30,3 +30,8 @@ footer {
   width: 90%;
   height: 40px;
 }
+
+.smtc-table-hover td:hover {
+  background-color: #62dbad;
+  cursor: pointer;
+}
