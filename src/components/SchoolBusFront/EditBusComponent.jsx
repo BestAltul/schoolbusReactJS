@@ -24,6 +24,7 @@ export default function EditBusComponent() {
     const fetchBusData = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/${name}`);
+        console.log(response.data);
         setBusData(response.data);
         setLoading(false);
       } catch (err) {
@@ -38,6 +39,7 @@ export default function EditBusComponent() {
     const fetchTerminals = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/terminals`);
+        // console.log("terminals", response);
         setTerminals(response.data);
       } catch (err) {
         console.error("Error fetching terminals:", err);
@@ -56,7 +58,7 @@ export default function EditBusComponent() {
 
   const handleSave = async () => {
     try {
-      await axios.put(`${BASE_URL}/${id}`, busData);
+      await axios.put(`${BASE_URL}/${name}`, busData);
       alert("Bus details updated successfully!");
       navigate("/buses");
     } catch (err) {
@@ -108,7 +110,7 @@ export default function EditBusComponent() {
             <option value="">Select Terminal</option>
             {terminals.map((terminal) => (
               <option key={terminal.id} value={terminal.name}>
-                {terminal.name}
+                {terminal}
               </option>
             ))}
           </select>

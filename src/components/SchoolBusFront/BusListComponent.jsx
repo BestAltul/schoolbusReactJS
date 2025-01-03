@@ -28,7 +28,7 @@ export default function BusListComponent() {
         const response = await axios.get(
           "http://localhost:8080/api/v3/schoolbus-management"
         );
-        console.log(response.data);
+        console.log(" My data: ", response.data);
         setBusList(response.data);
         setLoading(false);
       } catch (err) {
@@ -55,10 +55,18 @@ export default function BusListComponent() {
           <tbody>
             {buslist.map((element) => (
               <tr key={element.name}>
-                <td>{element.name}</td>
-                <td>{element.terminal}</td>
-                <td>{element.dashCamDTO.name}</td>
-                <td>{element.radioDTO.name}</td>
+                <td>{element.name ? element.name : "Not available"}</td>
+                <td>{element.terminal ? element.terminal : "Not available"}</td>
+                <td>
+                  {element.dashCamDTO && element.dashCamDTO.name
+                    ? element.dashCamDTO.name
+                    : "Not available"}
+                </td>
+                <td>
+                  {element.radioDTO && element.radioDTO.name
+                    ? element.radioDTO.name
+                    : "Not available"}
+                </td>
                 <td>
                   <button
                     className="btn btn-warning"
