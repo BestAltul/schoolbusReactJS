@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function BusListComponent() {
   // const today = new Date();
@@ -19,6 +20,7 @@ export default function BusListComponent() {
   const [buslist, setBusList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBusList = async () => {
@@ -58,7 +60,12 @@ export default function BusListComponent() {
                 <td>{element.dashCamDTO.name}</td>
                 <td>{element.radioDTO.name}</td>
                 <td>
-                  <button className="btn btn-warning">Edit</button>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => navigate(`/edit/${element.name}`)}
+                  >
+                    Edit
+                  </button>
                 </td>
               </tr>
             ))}

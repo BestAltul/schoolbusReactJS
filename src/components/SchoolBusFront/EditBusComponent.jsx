@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const BASE_URL = "http://localhost:8080/api/buses";
+const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
 
 export default function EditBusComponent() {
-  const { id } = useParams();
+  const { name } = useParams();
   const navigate = useNavigate();
+  const [terminals, setTerminals] = useState([]);
 
   const [busData, setBusData] = useState({
     number: "",
@@ -22,7 +23,7 @@ export default function EditBusComponent() {
   useEffect(() => {
     const fetchBusData = async () => {
       try {
-        const response = await axios.get(`&{BASE_URL}/&{id}`);
+        const response = await axios.get(`${BASE_URL}/${name}`);
         setBusData(response.data);
         setLoading(false);
       } catch (err) {
@@ -31,9 +32,20 @@ export default function EditBusComponent() {
       }
     };
     fetchBusData();
-  }, [id]);
+  }, [name]);
 
-  // Обработчик изменения полей формы
+  useEffect(() => {
+    const fetchTerminals = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/terminals`);
+        setTerminals(response.data);
+      } catch (err) {
+        console.error("Error fetching terminals:", err);
+      }
+    };
+    fetchTerminals();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBusData((prevData) => ({
@@ -42,12 +54,11 @@ export default function EditBusComponent() {
     }));
   };
 
-  // Сохранение изменений с проверкой версии
   const handleSave = async () => {
     try {
-      await axios.put(`${BASE_URL}/${id}`, busData); // Использование базового URL
+      await axios.put(`${BASE_URL}/${id}`, busData);
       alert("Bus details updated successfully!");
-      navigate("/buses"); // Перенаправление на список автобусов
+      navigate("/buses");
     } catch (err) {
       if (err.response && err.response.status === 409) {
         alert(
@@ -59,9 +70,8 @@ export default function EditBusComponent() {
     }
   };
 
-  // Отмена изменений
   const handleCancel = () => {
-    navigate("/buses"); // Возврат к списку автобусов
+    navigate("/buses");
   };
 
   if (loading) return <p>Loading bus data...</p>;
@@ -72,15 +82,15 @@ export default function EditBusComponent() {
       <h1>Edit Bus</h1>
       <form>
         <div className="mb-3">
-          <label htmlFor="number" className="form-label">
+          <label htmlFor="name" className="form-label">
             Bus Number
           </label>
           <input
             type="text"
             className="form-control"
-            id="number"
-            name="number"
-            value={busData.number}
+            id="name"
+            name="name"
+            value={busData.name}
             onChange={handleChange}
           />
         </div>
@@ -88,14 +98,20 @@ export default function EditBusComponent() {
           <label htmlFor="terminal" className="form-label">
             Terminal
           </label>
-          <input
-            type="text"
-            className="form-control"
+          <select
+            className="form-select"
             id="terminal"
             name="terminal"
             value={busData.terminal}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select Terminal</option>
+            {terminals.map((terminal) => (
+              <option key={terminal.id} value={terminal.name}>
+                {terminal.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="dashCamera" className="form-label">
