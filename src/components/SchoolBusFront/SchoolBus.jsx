@@ -5,6 +5,7 @@ import ErrorComponent from "./ErrorComponent";
 import BusListComponent from "./BusListComponent";
 import CameraListComponent from "./DashCameraComponent";
 import EditBusComponent from "./EditBusComponent";
+import NewBusComponent from "./NewBusComponent";
 import "./SchoolBus.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import HeaderComponent from "./HeaderComponent";
@@ -51,6 +52,14 @@ export default function SchoolBus() {
               element={
                 <AuthenticatedRoute>
                   <EditBusComponent />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/new_bus"
+              element={
+                <AuthenticatedRoute>
+                  <NewBusComponent />
                 </AuthenticatedRoute>
               }
             />

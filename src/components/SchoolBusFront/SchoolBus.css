@@ -31,7 +31,11 @@ footer {
   height: 40px;
 }
 
-.smtc-table-hover td:hover {
+/* .smtc-table-hover td:hover {
   background-color: #62dbad;
   cursor: pointer;
+} */
+
+.smtc-selected-row {
+  background-color: yellow !important;
 }

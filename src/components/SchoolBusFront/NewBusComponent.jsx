@@ -4,21 +4,15 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
 
-export default function EditBusComponent() {
+export default function NewBusComponent() {
   const { name } = useParams();
   const navigate = useNavigate();
   const [terminals, setTerminals] = useState([]);
+  const [busType, setBusType] = useState([]);
 
   const [busData, setBusData] = useState({
-    number: "",
-    terminal: "",
-    dashCamera: "",
-    radio: "",
-    version: "",
-  });
-
-  const [originalBusData, setOriginalBusData] = useState({
-    number: "",
+    name: "",
+    busType: "",
     terminal: "",
     dashCamera: "",
     radio: "",
@@ -29,32 +23,27 @@ export default function EditBusComponent() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchBusData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/${name}`);
-        console.log(response.data);
-        setBusData(response.data);
-        setOriginalBusData(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-    fetchBusData();
-  }, [name]);
-
-  useEffect(() => {
     const fetchTerminals = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/terminals`);
-        // console.log("terminals", response);
         setTerminals(response.data);
       } catch (err) {
         console.error("Error fetching terminals:", err);
       }
     };
     fetchTerminals();
+  }, []);
+
+  useEffect(() => {
+    const fetchBusType = async () => {
+      try {
+        const responseBusType = await axios.get(`${BASE_URL}/bus-type`);
+        setBusType(responseBusType.data);
+      } catch (err) {
+        console.error("Error fetching bys type:", err);
+      }
+    };
+    fetchBusType();
   }, []);
 
   const handleChange = (e) => {
@@ -67,13 +56,11 @@ export default function EditBusComponent() {
 
   const handleSave = async () => {
     try {
-      const updatedFields = getUpdatedFields(originalBusData, busData);
-
-      if (Object.keys(updatedFields).length === 0) {
+      if (Object.keys(busData).length === 0) {
         alert("No changes detected.");
       }
 
-      await axios.patch(`${BASE_URL}/${name}`, updatedFields);
+      await axios.post(`${BASE_URL}`, busData);
       alert("Bus details updated successfully!");
       navigate("/bus_list");
     } catch (err) {
@@ -87,26 +74,16 @@ export default function EditBusComponent() {
     }
   };
 
-  const getUpdatedFields = (original, updated) => {
-    const changes = {};
-    for (const key in updated) {
-      if (updated[key] !== original[key]) {
-        changes[key] = updated[key];
-      }
-    }
-    return changes;
-  };
-
   const handleCancel = () => {
     navigate("/bus_list");
   };
 
-  if (loading) return <p>Loading bus data...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  // if (loading) return <p>Loading bus data...</p>;
+  // if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
   return (
     <div className="container">
-      <h1>Edit Bus</h1>
+      <h1>New Bus</h1>
       <form>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
@@ -120,6 +97,25 @@ export default function EditBusComponent() {
             value={busData.name}
             onChange={handleChange}
           />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="busType" className="form-label">
+            Bus type
+          </label>
+          <select
+            className="form-select"
+            id="busType"
+            name="busType"
+            value={busData.busType}
+            onChange={handleChange}
+          >
+            <option value="">Select bus type</option>
+            {busType.map((busType) => (
+              <option key={busType.id} value={busType.name}>
+                {busType}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="terminal" className="form-label">
@@ -140,6 +136,7 @@ export default function EditBusComponent() {
             ))}
           </select>
         </div>
+
         <div className="mb-3">
           <label htmlFor="dashCamera" className="form-label">
             Dash Camera

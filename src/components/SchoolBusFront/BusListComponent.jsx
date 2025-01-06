@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./SchoolBus.css";
 
 export default function BusListComponent() {
   // const today = new Date();
@@ -10,13 +11,7 @@ export default function BusListComponent() {
   //   today.getDay()
   // );
 
-  // const buslist = [
-  //   { id: 1, description: "512", done: false, targetDate: targetDate },
-  //   { id: 2, description: "513", done: false, targetDate: targetDate },
-  //   { id: 3, description: "514", done: false, targetDate: targetDate },
-  //   { id: 4, description: "515", done: false, targetDate: targetDate },
-  // ];
-
+  const [selectedBus, setSelectedBus] = useState(null);
   const [buslist, setBusList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,42 +33,72 @@ export default function BusListComponent() {
     };
     fetchBusList();
   }, []);
+
+  const handleAddBus = () => {
+    navigate("/new_bus");
+  };
+
+  const handleDeleteBus = () => {
+    alert("Select a bus to delete");
+  };
+
   return (
     <div className="container">
       <h1>List of buses</h1>
+
+      <div className="panel">
+        <button className="btn btn-primary" onClick={handleAddBus}>
+          Add New Bus
+        </button>
+        <button
+          className="btn btn-secondary"
+          onClick={() => {
+            if (selectedBus) {
+              navigate(`/edit/${selectedBus.name}`);
+            } else {
+              alert("Please select a bus to edit.");
+            }
+          }}
+        >
+          Edit Bus
+        </button>
+        <button className="btn btn-danger" onClick={handleDeleteBus}>
+          Delete Bus
+        </button>
+      </div>
+
       <div>
-        <table className="table smtc-table-hover">
+        <table className="table table-hover">
           <thead>
             <tr>
               <td>Number</td>
               <td>Terminal</td>
               <td>Dash camera</td>
               <td>Radio</td>
-              <td>Edit</td>
             </tr>
           </thead>
           <tbody>
             {buslist.map((element) => (
-              <tr key={element.name}>
-                <td>{element.name ? element.name : "Not available"}</td>
-                <td>{element.terminal ? element.terminal : "Not available"}</td>
+              <tr
+                key={element.name}
+                onClick={() => {
+                  setSelectedBus(element);
+                  console.log("Selected row:", element);
+                }}
+                className={
+                  selectedBus?.name === element.name ? "smtc-selected-row" : ""
+                }
+                style={{ cursor: "pointer" }}
+              >
+                <td>{element.name || "Not available"}</td>
+                <td>{element.terminal || "Not available"}</td>
                 <td>
-                  {element.dashCamDTO && element.dashCamDTO.name
-                    ? element.dashCamDTO.name
-                    : "Not available"}
+                  {(element.dashCamDTO && element.dashCamDTO.name) ||
+                    "Not available"}
                 </td>
                 <td>
-                  {element.radioDTO && element.radioDTO.name
-                    ? element.radioDTO.name
-                    : "Not available"}
-                </td>
-                <td>
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => navigate(`/edit/${element.name}`)}
-                  >
-                    Edit
-                  </button>
+                  {(element.radioDTO && element.radioDTO.name) ||
+                    "Not available"}
                 </td>
               </tr>
             ))}
