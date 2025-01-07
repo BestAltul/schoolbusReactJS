@@ -10,6 +10,12 @@ export default function NewBusComponent() {
   const [terminals, setTerminals] = useState([]);
   const [busType, setBusType] = useState([]);
 
+  const [dashCams, setDashCams] = useState({
+    id,
+    name,
+    DRID,
+  });
+
   const [busData, setBusData] = useState({
     name: "",
     busType: "",
@@ -17,6 +23,7 @@ export default function NewBusComponent() {
     dashCamera: "",
     radio: "",
     version: "",
+    markedForDeletion: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -32,6 +39,18 @@ export default function NewBusComponent() {
       }
     };
     fetchTerminals();
+  }, []);
+
+  useEffect(() => {
+    const fetchDashCams = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/dashcams`);
+        setDashCams(response.data);
+      } catch (err) {
+        console.error("Error fetching dashcams:", err);
+      }
+    };
+    fetchDashCams();
   }, []);
 
   useEffect(() => {

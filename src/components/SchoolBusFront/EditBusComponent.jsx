@@ -10,7 +10,7 @@ export default function EditBusComponent() {
   const [terminals, setTerminals] = useState([]);
 
   const [busData, setBusData] = useState({
-    number: "",
+    name: "",
     terminal: "",
     dashCamera: "",
     radio: "",
