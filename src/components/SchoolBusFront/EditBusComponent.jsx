@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
+const BASE_URL_dashcan = "http://localhost:8080/api/v3/dashcam-management";
 
 export default function EditBusComponent() {
   const { name } = useParams();
   const navigate = useNavigate();
   const [terminals, setTerminals] = useState([]);
+  const [dashCameras, setDashCameras] = useState([]);
 
   const [busData, setBusData] = useState({
     name: "",
@@ -48,13 +50,25 @@ export default function EditBusComponent() {
     const fetchTerminals = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/terminals`);
-        // console.log("terminals", response);
         setTerminals(response.data);
       } catch (err) {
         console.error("Error fetching terminals:", err);
       }
     };
     fetchTerminals();
+  }, []);
+
+  useEffect(() => {
+    const fetchDashCameras = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL_dashcan}`);
+        console.log("cameras mias", response.data);
+        setDashCameras(response.data);
+      } catch (err) {
+        console.error("Error fetching dashcams:", err);
+      }
+    };
+    fetchDashCameras();
   }, []);
 
   const handleChange = (e) => {
@@ -73,7 +87,19 @@ export default function EditBusComponent() {
         alert("No changes detected.");
       }
 
-      await axios.patch(`${BASE_URL}/${name}`, updatedFields);
+      //      await axios.patch(`${BASE_URL}/${name}`, updatedFields);
+      if (updatedFields.terminal) {
+        await axios.patch(`${BASE_URL}/${name}`, {
+          terminal: updatedFields.terminal,
+        });
+      }
+
+      if (updatedFields.dashCamera) {
+        await axios.patch(`${BASE_URL}/${name}`, {
+          dashCamera: updatedFields.dashCamera,
+        });
+      }
+
       alert("Bus details updated successfully!");
       navigate("/bus_list");
     } catch (err) {
@@ -142,16 +168,22 @@ export default function EditBusComponent() {
         </div>
         <div className="mb-3">
           <label htmlFor="dashCamera" className="form-label">
-            Dash Camera
+            Dashcam
           </label>
-          <input
-            type="text"
-            className="form-control"
+          <select
+            className="form-select"
             id="dashCamera"
             name="dashCamera"
             value={busData.dashCamera}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select dashcam</option>
+            {dashCameras.map((dashCam) => (
+              <option key={dashCam.id} value={dashCam.name}>
+                {dashCam.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="radio" className="form-label">

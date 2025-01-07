@@ -10,11 +10,11 @@ export default function NewBusComponent() {
   const [terminals, setTerminals] = useState([]);
   const [busType, setBusType] = useState([]);
 
-  const [dashCams, setDashCams] = useState({
-    id,
-    name,
-    DRID,
-  });
+  // const [dashCams, setDashCams] = useState({
+  //   id,
+  //   name,
+  //   DRID,
+  // });
 
   const [busData, setBusData] = useState({
     name: "",
