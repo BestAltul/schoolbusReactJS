@@ -120,7 +120,7 @@ export default function BusListComponent() {
                 <td>{element.name || "Not available"}</td>
                 <td>{element.terminal || "Not available"}</td>
                 <td>
-                  {(element.dashCamDTO && element.dashCamDTO.name) ||
+                  {(element.dashCamDTO && element.dashCamDTO.drid) ||
                     "Not available"}
                 </td>
                 <td>

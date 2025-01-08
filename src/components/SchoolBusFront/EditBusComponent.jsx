@@ -14,15 +14,20 @@ export default function EditBusComponent() {
   const [busData, setBusData] = useState({
     name: "",
     terminal: "",
-    dashCamera: "",
+    dashCamera: {
+      id: "",
+      name: "",
+      simCard: "",
+      imei: "",
+    },
     radio: "",
     version: "",
   });
 
   const [originalBusData, setOriginalBusData] = useState({
-    number: "",
+    name: "",
     terminal: "",
-    dashCamera: "",
+    dashCamDTO: "",
     radio: "",
     version: "",
   });
@@ -32,6 +37,8 @@ export default function EditBusComponent() {
     loading,
     error,
   } = useFetchDashCameras(BASE_URL_dashcam);
+
+  console.log("camery ", dashCameras);
 
   const {
     data: terminals,
@@ -43,12 +50,11 @@ export default function EditBusComponent() {
     const fetchBusData = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/${name}`);
-        console.log(response.data);
         setBusData(response.data);
         setOriginalBusData(response.data);
-        setLoading(false);
+        //  setLoading(false);
       } catch (err) {
-        setError(err.message);
+        //   setError(err.message);
         // setLoading(false);
       }
     };
@@ -71,7 +77,6 @@ export default function EditBusComponent() {
         alert("No changes detected.");
       }
 
-      //      await axios.patch(`${BASE_URL}/${name}`, updatedFields);
       if (updatedFields.terminal) {
         await axios.patch(`${BASE_URL}/${name}`, {
           terminal: updatedFields.terminal,
@@ -79,11 +84,11 @@ export default function EditBusComponent() {
       }
 
       if (updatedFields.dashCamera) {
+        console.log("name 83", updatedFields.dashCamera);
         await axios.patch(`${BASE_URL}/${name}`, {
-          dashCamera: updatedFields.dashCamera,
+          dashCamDTO: { drid: updatedFields.dashCamera },
         });
       }
-
       alert("Bus details updated successfully!");
       navigate("/bus_list");
     } catch (err) {
@@ -151,7 +156,7 @@ export default function EditBusComponent() {
           </select>
         </div>
         <div className="mb-3">
-          <label htmlFor="dashCamera" className="form-label">
+          <label htmlFor="dashCamDTO" className="form-label">
             Dashcam
           </label>
           <select
@@ -165,8 +170,8 @@ export default function EditBusComponent() {
             {dashCameras &&
               dashCameras.length > 0 &&
               dashCameras.map((dashCam) => (
-                <option key={dashCam.id} value={dashCam.name}>
-                  {dashCam.name}
+                <option key={dashCam.id} value={dashCam.drid}>
+                  {dashCam.drid}
                 </option>
               ))}
           </select>

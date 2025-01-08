@@ -1,20 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useFetchDashCameras from "../hooks/useFetchDashCameras";
+import useFetchTerminals from "../hooks/useFetchTerminals";
 
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
+const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 
 export default function NewBusComponent() {
   const { name } = useParams();
   const navigate = useNavigate();
   const [terminals, setTerminals] = useState([]);
   const [busType, setBusType] = useState([]);
-
-  const [dashCams, setDashCams] = useState({
-    id,
-    name,
-    DRID,
-  });
 
   const [busData, setBusData] = useState({
     name: "",
@@ -25,9 +22,6 @@ export default function NewBusComponent() {
     version: "",
     markedForDeletion: "",
   });
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTerminals = async () => {
@@ -41,17 +35,11 @@ export default function NewBusComponent() {
     fetchTerminals();
   }, []);
 
-  useEffect(() => {
-    const fetchDashCams = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/dashcams`);
-        setDashCams(response.data);
-      } catch (err) {
-        console.error("Error fetching dashcams:", err);
-      }
-    };
-    fetchDashCams();
-  }, []);
+  const {
+    data: dashCams,
+    loading,
+    error,
+  } = useFetchDashCameras(BASE_URL_dashcam);
 
   useEffect(() => {
     const fetchBusType = async () => {
