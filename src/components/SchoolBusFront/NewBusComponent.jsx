@@ -10,11 +10,11 @@ export default function NewBusComponent() {
   const [terminals, setTerminals] = useState([]);
   const [busType, setBusType] = useState([]);
 
-  // const [dashCams, setDashCams] = useState({
-  //   id,
-  //   name,
-  //   DRID,
-  // });
+  const [dashCams, setDashCams] = useState({
+    id,
+    name,
+    DRID,
+  });
 
   const [busData, setBusData] = useState({
     name: "",
@@ -96,9 +96,6 @@ export default function NewBusComponent() {
   const handleCancel = () => {
     navigate("/bus_list");
   };
-
-  // if (loading) return <p>Loading bus data...</p>;
-  // if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
   return (
     <div className="container">

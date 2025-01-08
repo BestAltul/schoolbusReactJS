@@ -1,42 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./SchoolBus.css";
+import useFetch from "../hooks/useFetchDashCameras";
+
+const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 
 export default function DashCameraComponent() {
   const [simCardHistory, setSimCardHistory] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  const cameralist = [
-    {
-      name: 1,
-      DRID: "TOM512",
-      IMEI: 5555555,
-      simCardNumber: 1234,
-      simCardHistory: "firstHistory",
-    },
-    {
-      name: 2,
-      DRID: "TOM513",
-      IMEI: 6666666,
-      simCardNumber: 8901260703410,
-      simCardHistory: "secondHistory",
-    },
-    {
-      name: 3,
-      DRID: "TOM514",
-      IMEI: 7777777,
-      simCardNumber: 890126070341012,
-      simCardHistory: "thirdHistory",
-    },
-    {
-      name: 4,
-      DRID: "FB515",
-      IMEI: 888888,
-      simCardNumber: 890126070341012,
-      simCardHistory: "fourthHistory",
-    },
-  ];
+  const { data: dashCameras, loading, error } = useFetch(BASE_URL_dashcam);
 
   const handleSimCardHistory = (content) => {
     setSimCardHistory(content);
@@ -62,11 +37,11 @@ export default function DashCameraComponent() {
             </tr>
           </thead>
           <tbody>
-            {cameralist.map((element) => (
+            {dashCameras.map((element) => (
               <tr key={element.name}>
                 <td>{element.name}</td>
-                <td>{element.DRID}</td>
-                <td>{element.IMEI}</td>
+                <td>{element.drid}</td>
+                <td>{element.imei}</td>
                 <td
                   onClick={() =>
                     handleSimCardHistory(`Sim card: ${element.simCardHistory}`)

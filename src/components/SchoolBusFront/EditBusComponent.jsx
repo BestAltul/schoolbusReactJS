@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useFetchDashCameras from "../hooks/useFetchDashCameras";
+import useFetchTerminals from "../hooks/useFetchTerminals";
 
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
-const BASE_URL_dashcan = "http://localhost:8080/api/v3/dashcam-management";
+const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 
 export default function EditBusComponent() {
   const { name } = useParams();
   const navigate = useNavigate();
-  const [terminals, setTerminals] = useState([]);
-  const [dashCameras, setDashCameras] = useState([]);
 
   const [busData, setBusData] = useState({
     name: "",
@@ -27,8 +27,17 @@ export default function EditBusComponent() {
     version: "",
   });
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const {
+    data: dashCameras,
+    loading,
+    error,
+  } = useFetchDashCameras(BASE_URL_dashcam);
+
+  const {
+    data: terminals,
+    terminalLoading,
+    terminalError,
+  } = useFetchTerminals(BASE_URL);
 
   useEffect(() => {
     const fetchBusData = async () => {
@@ -40,36 +49,11 @@ export default function EditBusComponent() {
         setLoading(false);
       } catch (err) {
         setError(err.message);
-        setLoading(false);
+        // setLoading(false);
       }
     };
     fetchBusData();
   }, [name]);
-
-  useEffect(() => {
-    const fetchTerminals = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/terminals`);
-        setTerminals(response.data);
-      } catch (err) {
-        console.error("Error fetching terminals:", err);
-      }
-    };
-    fetchTerminals();
-  }, []);
-
-  useEffect(() => {
-    const fetchDashCameras = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL_dashcan}`);
-        console.log("cameras mias", response.data);
-        setDashCameras(response.data);
-      } catch (err) {
-        console.error("Error fetching dashcams:", err);
-      }
-    };
-    fetchDashCameras();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -178,11 +162,13 @@ export default function EditBusComponent() {
             onChange={handleChange}
           >
             <option value="">Select dashcam</option>
-            {dashCameras.map((dashCam) => (
-              <option key={dashCam.id} value={dashCam.name}>
-                {dashCam.name}
-              </option>
-            ))}
+            {dashCameras &&
+              dashCameras.length > 0 &&
+              dashCameras.map((dashCam) => (
+                <option key={dashCam.id} value={dashCam.name}>
+                  {dashCam.name}
+                </option>
+              ))}
           </select>
         </div>
         <div className="mb-3">
