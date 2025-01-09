@@ -3,8 +3,9 @@ import LogoutComponent from "./LogoutComponent";
 import WelcomeComponent from "./WelcomeComponent";
 import ErrorComponent from "./ErrorComponent";
 import BusListComponent from "./BusListComponent";
-import CameraListComponent from "./DashCameraComponent";
+import CameraListComponent from "./DashCamListComponent";
 import BusFormComponent from "./BusFormComponent";
+import DashcamFormComponent from "./DashCamFormComponent";
 import "./SchoolBus.css";
 import "./Welcome.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
@@ -76,6 +77,14 @@ export default function SchoolBus() {
               element={
                 <AuthenticatedRoute>
                   <CameraListComponent />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/new_dashcam"
+              element={
+                <AuthenticatedRoute>
+                  <DashcamFormComponent isEdit={false} />
                 </AuthenticatedRoute>
               }
             />

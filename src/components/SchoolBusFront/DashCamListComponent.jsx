@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -10,6 +11,8 @@ const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 export default function DashCameraComponent() {
   const [simCardHistory, setSimCardHistory] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  //const [selectedDashcam, selectedDashcam] = useState();
 
   const { data: dashCameras, loading, error } = useFetch(BASE_URL_dashcam);
 
@@ -22,9 +25,43 @@ export default function DashCameraComponent() {
     setShowModal(false);
   };
 
+  const handleAddDashcam = () => {
+    navigate("/new_dashcam");
+  };
+
   return (
     <div>
       <h1>Dash cameras</h1>
+
+      <div className="panel">
+        <button className="btn btn-primary" onClick={handleAddDashcam}>
+          Add New dashcam
+        </button>
+        <button
+          className="btn btn-secondary"
+          onClick={() => {
+            if (selectedBus) {
+              // navigate(`/edit/${selectedBus.name}`);
+            } else {
+              alert("Please select a dashcam to edit.");
+            }
+          }}
+        >
+          Edit Bus
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            if (selectedBus) {
+              //handleDeleteDashcam(selectedBus.name);
+            } else {
+              alert("Please select a bus to delete.");
+            }
+          }}
+        >
+          Delete Bus
+        </button>
+      </div>
       <div>
         <table className="table smtc-table-hover">
           <thead>

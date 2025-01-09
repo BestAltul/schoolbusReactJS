@@ -40,15 +40,11 @@ export default function BusListComponent() {
     navigate("/new_bus");
   };
 
-  // const handleDeleteBus = () => {
-  //   alert("Select a bus to delete");
-  // };
-
   const handleDeleteBus = async (name) => {
     try {
       await axios.patch(`${BASE_URL}/${name}/mark-for-deletion`);
       alert("Bus marked for deletion!");
-      fetchBusList(); // Обновляет список автобусов после удаления
+      fetchBusList();
     } catch (err) {
       alert("Error marking bus for deletion: " + err.message);
     }

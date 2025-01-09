@@ -145,7 +145,6 @@ export default function BusFormComponent({ isEdit = false }) {
       <h1>{formHeader}</h1>
       <div className="form-wrapper">
         <form className="form-container">
-          {/* Блок с номером автобуса и типом */}
           <div className="form-group-row">
             <div className="row">
               <div className="col-md-6">
@@ -183,7 +182,6 @@ export default function BusFormComponent({ isEdit = false }) {
             </div>
           </div>
 
-          {/* Блок с терминалом */}
           <div className="form-group-row">
             <label htmlFor="terminal" className="form-label text-warning">
               Terminal
@@ -204,7 +202,6 @@ export default function BusFormComponent({ isEdit = false }) {
             </select>
           </div>
 
-          {/* Блок с камерой и радио */}
           <div className="form-group-row">
             <div className="row">
               <div className="col-md-6">
