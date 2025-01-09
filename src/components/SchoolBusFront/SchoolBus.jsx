@@ -4,9 +4,9 @@ import WelcomeComponent from "./WelcomeComponent";
 import ErrorComponent from "./ErrorComponent";
 import BusListComponent from "./BusListComponent";
 import CameraListComponent from "./DashCameraComponent";
-import EditBusComponent from "./EditBusComponent";
-import NewBusComponent from "./NewBusComponent";
+import BusFormComponent from "./BusFormComponent";
 import "./SchoolBus.css";
+import "./Welcome.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import HeaderComponent from "./HeaderComponent";
 import FooterComponent from "./FooterComponent";
@@ -40,6 +40,14 @@ export default function SchoolBus() {
               }
             />
             <Route
+              path="/welcome/"
+              element={
+                <AuthenticatedRoute>
+                  <WelcomeComponent />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
               path="/bus_list"
               element={
                 <AuthenticatedRoute>
@@ -51,7 +59,7 @@ export default function SchoolBus() {
               path="/edit/:name"
               element={
                 <AuthenticatedRoute>
-                  <EditBusComponent />
+                  <BusFormComponent isEdit={true} />
                 </AuthenticatedRoute>
               }
             />
@@ -59,7 +67,7 @@ export default function SchoolBus() {
               path="/new_bus"
               element={
                 <AuthenticatedRoute>
-                  <NewBusComponent />
+                  <BusFormComponent isEdit={false} />
                 </AuthenticatedRoute>
               }
             />

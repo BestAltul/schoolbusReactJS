@@ -20,7 +20,7 @@ export default function HeaderComponent() {
               className="navbar-brand ms-2 fs-2 fw-bold text-black"
               href="https://www.a-smart-technology.com"
             >
-              School bus
+              WNY BUSCO
             </a>
             <div className="collapse navbar-collapse">
               <ul className="navbar-nav">
