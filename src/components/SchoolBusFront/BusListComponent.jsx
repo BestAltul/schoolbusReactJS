@@ -100,7 +100,7 @@ export default function BusListComponent() {
                 key={element.name}
                 onClick={() => {
                   setSelectedBus(element);
-                  console.log("Selected row:", element);
+                  //console.log("Selected row:", element);
                 }}
                 className={
                   selectedBus?.name === element.name ? "smtc-selected-row" : ""

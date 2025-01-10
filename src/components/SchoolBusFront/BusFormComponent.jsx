@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useFetchDashCameras from "../hooks/useFetchDashCameras";
+import useFetchDashCameras from "../hooks/useFetchDashcams";
 import useFetchTerminals from "../hooks/useFetchTerminals";
 import schoolBusImage from "../../assets/images/schoolbus.png";
 
@@ -101,7 +101,6 @@ export default function BusFormComponent({ isEdit = false }) {
         }
 
         if (updatedFields.dashCamera) {
-          console.log("name 83", updatedFields.dashCamera);
           await axios.patch(`${BASE_URL}/${name}`, {
             dashCamDTO: { drid: updatedFields.dashCamera },
           });

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./SchoolBus.css";
-import useFetch from "../hooks/useFetchDashCameras";
+import useFetch from "../hooks/useFetchDashcams";
 
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 
@@ -12,7 +11,7 @@ export default function DashCameraComponent() {
   const [simCardHistory, setSimCardHistory] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  //const [selectedDashcam, selectedDashcam] = useState();
+  const [selectedDashcam, setSelectedDashcam] = useState(null);
 
   const { data: dashCameras, loading, error } = useFetch(BASE_URL_dashcam);
 
@@ -21,13 +20,21 @@ export default function DashCameraComponent() {
     setShowModal(true);
   };
 
-  const handleCloseModal = (contest) => {
+  const handleCloseModal = () => {
     setShowModal(false);
   };
 
   const handleAddDashcam = () => {
     navigate("/new_dashcam");
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error occurred: {error.message}</p>;
+  }
 
   return (
     <div>
@@ -40,26 +47,26 @@ export default function DashCameraComponent() {
         <button
           className="btn btn-secondary"
           onClick={() => {
-            if (selectedBus) {
-              // navigate(`/edit/${selectedBus.name}`);
+            if (selectedDashcam) {
+              navigate(`/dashcam-edit/${selectedDashcam.name}`);
             } else {
               alert("Please select a dashcam to edit.");
             }
           }}
         >
-          Edit Bus
+          Edit Dashcam
         </button>
         <button
           className="btn btn-danger"
           onClick={() => {
-            if (selectedBus) {
-              //handleDeleteDashcam(selectedBus.name);
+            if (selectedDashcam) {
+              //handleDeleteDashcam(selectedDashcam.name);
             } else {
-              alert("Please select a bus to delete.");
+              alert("Please select a dashcam to delete.");
             }
           }}
         >
-          Delete Bus
+          Delete Dashcam
         </button>
       </div>
       <div>
@@ -75,7 +82,12 @@ export default function DashCameraComponent() {
           </thead>
           <tbody>
             {dashCameras.map((element) => (
-              <tr key={element.name}>
+              <tr
+                key={element.drid}
+                onClick={() => {
+                  setSelectedDashcam(element);
+                }}
+              >
                 <td>{element.name}</td>
                 <td>{element.drid}</td>
                 <td>{element.imei}</td>

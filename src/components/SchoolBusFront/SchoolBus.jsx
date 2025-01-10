@@ -89,6 +89,14 @@ export default function SchoolBus() {
               }
             />
             <Route
+              path="/dashcam-edit/:name"
+              element={
+                <AuthenticatedRoute>
+                  <DashcamFormComponent isEdit={true} />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
               path="/logout"
               element={
                 <AuthenticatedRoute>
