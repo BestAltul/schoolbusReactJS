@@ -1,22 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useFetchDashCamByDRID = (url, drid) => {
-  const [data, setData] = useState(null);
+const useFetchData = (url) => {
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!drid) {
-      setLoading(false);
-      return;
-    }
-
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
       try {
-        const response = await axios.get(`${url}/${drid}`);
+        const response = await axios.get(url);
         setData(response.data);
       } catch (err) {
         setError(err);
@@ -27,9 +20,9 @@ const useFetchDashCamByDRID = (url, drid) => {
     };
 
     fetchData();
-  }, [url, drid]);
+  }, [url]);
 
   return { data, loading, error };
 };
 
-export default useFetchDashCamByDRID;
+export default useFetchData;

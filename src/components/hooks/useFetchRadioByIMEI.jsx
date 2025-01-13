@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useFetchDashCameras = (url) => {
-  const [data, setData] = useState([]);
+const useFetchRadioByIMEI = (url, imei) => {
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!imei) {
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const response = await axios.get(url);
+        const response = await axios.get(`${url}/${imei}`);
         setData(response.data);
       } catch (err) {
         setError(err);
@@ -20,9 +27,9 @@ const useFetchDashCameras = (url) => {
     };
 
     fetchData();
-  }, [url]);
+  }, [url, imei]);
 
   return { data, loading, error };
 };
 
-export default useFetchDashCameras;
+export default useFetchRadioByIMEI;

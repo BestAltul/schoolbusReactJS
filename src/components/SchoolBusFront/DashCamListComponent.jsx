@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./SchoolBus.css";
-import useFetch from "../hooks/useFetchDashcams";
+import useFetch from "../hooks/useFetchData";
 
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 
@@ -28,6 +28,11 @@ export default function DashCameraComponent() {
     navigate("/new_dashcam");
   };
 
+  const handleDeleteDashcam = () => {
+    try {
+    } catch (err) {}
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -48,7 +53,7 @@ export default function DashCameraComponent() {
           className="btn btn-secondary"
           onClick={() => {
             if (selectedDashcam) {
-              navigate(`/dashcam-edit/${selectedDashcam.name}`);
+              navigate(`/dashcam-edit/${selectedDashcam.drid}`);
             } else {
               alert("Please select a dashcam to edit.");
             }
@@ -60,7 +65,7 @@ export default function DashCameraComponent() {
           className="btn btn-danger"
           onClick={() => {
             if (selectedDashcam) {
-              //handleDeleteDashcam(selectedDashcam.name);
+              handleDeleteDashcam(selectedDashcam.drid);
             } else {
               alert("Please select a dashcam to delete.");
             }

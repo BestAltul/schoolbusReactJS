@@ -6,6 +6,9 @@ import BusListComponent from "./BusListComponent";
 import CameraListComponent from "./DashCamListComponent";
 import BusFormComponent from "./BusFormComponent";
 import DashcamFormComponent from "./DashCamFormComponent";
+import RadioListComponent from "./RadioListComponent";
+import RadioFormComponent from "./RadioFormComponent";
+import SimCardListComponent from "./SimCardListComponent";
 import "./SchoolBus.css";
 import "./Welcome.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
@@ -89,10 +92,58 @@ export default function SchoolBus() {
               }
             />
             <Route
-              path="/dashcam-edit/:name"
+              path="/dashcam-edit/:drid"
               element={
                 <AuthenticatedRoute>
                   <DashcamFormComponent isEdit={true} />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/radio_list"
+              element={
+                <AuthenticatedRoute>
+                  <RadioListComponent />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/new_radio"
+              element={
+                <AuthenticatedRoute>
+                  <RadioFormComponent isEdit={false} />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/radio-edit/:imei"
+              element={
+                <AuthenticatedRoute>
+                  <RadioFormComponent isEdit={true} />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/simcard-list"
+              element={
+                <AuthenticatedRoute>
+                  <SimCardListComponent />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/new-simcard"
+              element={
+                <AuthenticatedRoute>
+                  <RadioFormComponent isEdit={false} />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/simcard-edit/:number"
+              element={
+                <AuthenticatedRoute>
+                  <RadioFormComponent isEdit={true} />
                 </AuthenticatedRoute>
               }
             />

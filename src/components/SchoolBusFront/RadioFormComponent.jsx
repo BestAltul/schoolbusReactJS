@@ -1,53 +1,53 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useFetchDashCamByDRID from "../hooks/useFetchDashCamByDRID";
-import cameraButton from "../../assets/images/camera-button.png";
+import useFetchRadio from "../hooks/useFetchData";
+import useFetchRadioByIMEI from "../hooks/useFetchRadioByIMEI";
+import radioButton from "../../assets/images/radio-button.png";
 
-const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
+const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
 
-export default function DashCamFormComponent({ isEdit = false }) {
-  const { drid } = useParams();
+export default function RadioFormComponent({ isEdit = false }) {
   const [formTitle, setFormTitle] = useState(
-    isEdit ? "Edit dashcam" : "New dashcam"
+    isEdit ? "Edit radio" : "New radio"
   );
+
+  const { imei } = useParams();
+
   const navigate = useNavigate();
 
-  const [originalDashcamData, setOriginalDashcamData] = useState({
-    id: "",
+  const [originalRadio, setOriginalRadio] = useState({
     name: "",
-    drid: "",
     imei: "",
+    simcard: "",
   });
 
-  const [dashcam, setDashcam] = useState({
-    id: "",
+  const [radio, setRadio] = useState({
     name: "",
-    drid: "",
     imei: "",
+    simcard: "",
   });
 
   const {
-    data: fetchedDashcam,
+    data: fetchedRadio,
     loading,
     error,
-  } = useFetchDashCamByDRID(BASE_URL_dashcam, drid);
+  } = useFetchRadioByIMEI(BASE_URL_radio, imei);
 
   useEffect(() => {
-    if (isEdit && fetchedDashcam) {
-      console.log("Fetched dashcam data before setting state:", fetchedDashcam);
-      setDashcam(fetchedDashcam);
-      setOriginalDashcamData(fetchedDashcam);
+    if (isEdit && fetchedRadio) {
+      setRadio(fetchedRadio);
+      setOriginalRadio(fetchedRadio);
     }
-  }, [fetchedDashcam, isEdit]);
-
-  const handleCancel = () => {
-    navigate("/camera_list");
-  };
+  }, [fetchedRadio, isEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDashcam((prevData) => ({ ...prevData, [name]: value }));
+    setRadio((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleCancel = () => {
+    navigate("/radio_list");
   };
 
   const getUpdatedFields = (original, updated) => {
@@ -63,23 +63,19 @@ export default function DashCamFormComponent({ isEdit = false }) {
   const handleSave = async () => {
     try {
       if (isEdit) {
-        const updatedFields = getUpdatedFields(originalDashcamData, dashcam);
+        const updatedFields = getUpdatedFields(originalRadio, radio);
 
         if (Object.keys(updatedFields).length > 0) {
-          await axios.patch(
-            `${BASE_URL_dashcam}/${dashcam.drid}`,
-            updatedFields
-          );
-          alert("Dashcam details updated successfully!");
+          await axios.patch(`${BASE_URL_radio}/${radio.imei}`, updatedFields);
+          alert("Radio details updated successfully!");
         }
       } else {
-        console.log("Перед сохранением ", dashcam);
-        await axios.post(`${BASE_URL_dashcam}`, dashcam);
-        alert("New dashcam added successfully!");
+        await axios.post(`${BASE_URL_radio}`, radio);
+        alert("New radio added successfully!");
       }
-      navigate("/camera_list");
+      navigate("/radio_list");
     } catch (err) {
-      alert("Error saving dashcam details: " + err.message);
+      alert("Error saving radio details: " + err.message);
     }
   };
 
@@ -99,14 +95,14 @@ export default function DashCamFormComponent({ isEdit = false }) {
           <div className="form-group-row">
             <div className="col-md-6">
               <label htmlFor="name" className="form-label text-primary">
-                Dashcam Name
+                Radio Name
               </label>
               <input
                 type="text"
                 className="form-control"
                 id="name"
                 name="name"
-                value={dashcam.name || ""}
+                value={radio.name || ""}
                 onChange={handleChange}
               />
             </div>
@@ -114,23 +110,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
 
           <div className="form-group-row">
             <div className="col-md-6">
-              <label htmlFor="drid" className="form-label text-success">
-                DRID
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="drid"
-                name="drid"
-                value={dashcam.drid || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="imei" className="form-label text-info">
+              <label htmlFor="imei" className="form-label text-success">
                 IMEI
               </label>
               <input
@@ -138,13 +118,29 @@ export default function DashCamFormComponent({ isEdit = false }) {
                 className="form-control"
                 id="imei"
                 name="imei"
-                value={dashcam.imei || ""}
+                value={radio.imei || ""}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="form-group-row">
+            <div className="col-md-6">
+              <label htmlFor="simcard" className="form-label text-info">
+                Sim card
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="imei"
+                name="simcard"
+                value={radio.simcard || ""}
                 onChange={handleChange}
               />
             </div>
           </div>
         </form>
-        <img src={cameraButton} alt="School Bus" className="camera" />
+        <img src={radioButton} alt="School Bus" className="camera" />
       </div>
 
       <hr className="divider" />

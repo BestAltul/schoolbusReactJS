@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useFetchDashCameras from "../hooks/useFetchDashcams";
+import useFetchData from "../hooks/useFetchData";
 import useFetchTerminals from "../hooks/useFetchTerminals";
 import schoolBusImage from "../../assets/images/schoolbus.png";
 
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
+const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
 
 export default function BusFormComponent({ isEdit = false }) {
   const { name } = useParams();
@@ -17,12 +18,7 @@ export default function BusFormComponent({ isEdit = false }) {
   const [busData, setBusData] = useState({
     name: "",
     terminal: "",
-    dashCamera: {
-      id: "",
-      name: "",
-      simCard: "",
-      imei: "",
-    },
+    dashCamera: { id: "", name: "", simCard: "", imei: "" },
     radio: "",
     version: "",
     markedForDeletion: "",
@@ -34,13 +30,10 @@ export default function BusFormComponent({ isEdit = false }) {
     dashCamDTO: "",
     radio: "",
     version: "",
+    markedForDeletion: "",
   });
 
-  const {
-    data: dashCameras,
-    loading,
-    error,
-  } = useFetchDashCameras(BASE_URL_dashcam);
+  const { data: dashcams, loading, error } = useFetchData(BASE_URL_dashcam);
 
   const {
     data: terminals,
@@ -48,13 +41,19 @@ export default function BusFormComponent({ isEdit = false }) {
     terminalError,
   } = useFetchTerminals(BASE_URL);
 
+  const {
+    data: radios,
+    radioLoading: radioLoading,
+    radioError: radioError,
+  } = useFetchData(BASE_URL_radio);
+
   useEffect(() => {
     const fetchBusType = async () => {
       try {
         const responseBusType = await axios.get(`${BASE_URL}/bus-type`);
         setBusType(responseBusType.data);
       } catch (err) {
-        console.error("Error fetching bys type:", err);
+        console.error("Error fetching bus type:", err);
       }
     };
     fetchBusType();
@@ -65,24 +64,45 @@ export default function BusFormComponent({ isEdit = false }) {
       const fetchBusData = async () => {
         try {
           const response = await axios.get(`${BASE_URL}/${name}`);
-          setBusData(response.data);
-          setOriginalBusData(response.data);
-          //  setLoading(false);
+          const bus = response.data;
+
+          console.log("response ", response.data);
+
+          setBusData({
+            ...bus,
+            dashCamera: bus.dashCamDTO
+              ? { id: bus.dashCamDTO.drid, name: bus.dashCamDTO.name }
+              : { id: "", name: "" },
+          });
+
+          setOriginalBusData(bus);
         } catch (err) {
-          //   setError(err.message);
-          // setLoading(false);
+          console.error("Error fetching bus data:", err);
         }
       };
-      fetchBusData();
-    }, [name]);
+
+      if (isEdit) {
+        fetchBusData();
+      }
+    }, [name, isEdit]);
   }
+
+  console.log("Dasss", busData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBusData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    if (name === "dashCamera" || name === "radio") {
+      setBusData((prevData) => ({
+        ...prevData,
+        dashCamera: { ...prevData.dashCamera, id: value },
+      }));
+    } else {
+      setBusData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSave = async () => {
@@ -92,6 +112,7 @@ export default function BusFormComponent({ isEdit = false }) {
 
         if (Object.keys(updatedFields).length === 0) {
           alert("No changes detected.");
+          return;
         }
 
         if (updatedFields.terminal) {
@@ -102,7 +123,7 @@ export default function BusFormComponent({ isEdit = false }) {
 
         if (updatedFields.dashCamera) {
           await axios.patch(`${BASE_URL}/${name}`, {
-            dashCamDTO: { drid: updatedFields.dashCamera },
+            dashCamDTO: { drid: updatedFields.dashCamera.id },
           });
         }
         alert("Bus details updated successfully!");
@@ -204,21 +225,20 @@ export default function BusFormComponent({ isEdit = false }) {
           <div className="form-group-row">
             <div className="row">
               <div className="col-md-6">
-                <label htmlFor="dashCamDTO" className="form-label text-danger">
+                <label htmlFor="dashCamera" className="form-label text-danger">
                   Dashcam
                 </label>
                 <select
                   className="form-select"
                   id="dashCamera"
                   name="dashCamera"
-                  value={busData.dashCamera}
+                  value={busData.dashCamera.id}
                   onChange={handleChange}
                 >
                   <option value="">Select dashcam</option>
-                  {dashCameras &&
-                    dashCameras.length > 0 &&
-                    dashCameras.map((dashCam) => (
-                      <option key={dashCam.id} value={dashCam.drid}>
+                  {dashcams &&
+                    dashcams.map((dashCam) => (
+                      <option key={dashCam.drid} value={dashCam.drid}>
                         {dashCam.drid}
                       </option>
                     ))}
@@ -228,14 +248,21 @@ export default function BusFormComponent({ isEdit = false }) {
                 <label htmlFor="radio" className="form-label text-info">
                   Radio
                 </label>
-                <input
-                  type="text"
-                  className="form-control"
+                <select
+                  className="form-select"
                   id="radio"
                   name="radio"
-                  value={busData.radio}
+                  value={busData.radio.id}
                   onChange={handleChange}
-                />
+                >
+                  <option value="">Select radio</option>
+                  {radios &&
+                    radios.map((radio) => (
+                      <option key={radio.id} value={radio.id}>
+                        {radio.name}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
           </div>
