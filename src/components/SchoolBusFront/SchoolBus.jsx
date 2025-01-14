@@ -9,6 +9,7 @@ import DashcamFormComponent from "./DashCamFormComponent";
 import RadioListComponent from "./RadioListComponent";
 import RadioFormComponent from "./RadioFormComponent";
 import SimCardListComponent from "./SimCardListComponent";
+import SimCardFormComponent from "./SimCardFormComponent";
 import "./SchoolBus.css";
 import "./Welcome.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
@@ -135,7 +136,7 @@ export default function SchoolBus() {
               path="/new-simcard"
               element={
                 <AuthenticatedRoute>
-                  <RadioFormComponent isEdit={false} />
+                  <SimCardFormComponent isEdit={false} />
                 </AuthenticatedRoute>
               }
             />

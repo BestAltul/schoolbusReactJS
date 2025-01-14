@@ -6,7 +6,7 @@ const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
 
 export default function SimCardListComponent() {
   const [selectedSimCard, setSelectedSimCard] = useState(null);
-  const [simCardlist, setSimCardList] = useState([]);
+  const [simCardList, setSimCardList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export default function SimCardListComponent() {
     fetchSimCardList();
   }, []);
 
-  const handleAddRadio = () => {
+  const handleAddSimCard = () => {
     navigate("/new-simcard");
   };
 
@@ -45,7 +45,7 @@ export default function SimCardListComponent() {
       <h1>List of sim cards</h1>
 
       <div className="panel">
-        <button className="btn btn-primary" onClick={handleAddRadio}>
+        <button className="btn btn-primary" onClick={handleAddSimCard}>
           Add new sim card
         </button>
         <button
@@ -84,7 +84,7 @@ export default function SimCardListComponent() {
             </tr>
           </thead>
           <tbody>
-            {simCardlistlist.map((element) => (
+            {simCardList.map((element) => (
               <tr
                 key={element.Number}
                 onClick={() => {
