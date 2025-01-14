@@ -12,18 +12,20 @@ export default function SimCardFormComponent({ isEdit = false }) {
     isEdit ? "Edit sim card" : "New sim card"
   );
   const navigate = useNavigate();
+  const [simCardType, setSimCardType] = useState([]);
+  const [simCardCarrier, setCarrier] = useState([]);
 
   const [originalSimCardData, setOriginalSimCardData] = useState({
     id: "",
     type: "",
-    carrier: "",
+    simCardCarrier: "",
     simCardNumber: "",
   });
 
   const [simCard, setSimCard] = useState({
     id: "",
     type: "",
-    carrier: "",
+    simCardCarrier: "",
     simCardNumber: "",
   });
 
@@ -43,6 +45,32 @@ export default function SimCardFormComponent({ isEdit = false }) {
       setOriginalSimCardData(fetchedSimCard);
     }
   }, [fetchedSimCard, isEdit]);
+
+  useEffect(() => {
+    const fetchSimCardType = async () => {
+      try {
+        const responseSimCardType = await axios.get(
+          `${BASE_URL_simcard}/simcard-type`
+        );
+        setSimCardType(responseSimCardType.data);
+      } catch (err) {
+        console.error("Error fetching SIM card type:", err);
+      }
+    };
+    fetchSimCardType();
+  }, []);
+
+  useEffect(() => {
+    const fetchCarrier = async () => {
+      try {
+        const responseCarrier = await axios.get(`${BASE_URL_simcard}/carrier`);
+        setCarrier(responseCarrier.data);
+      } catch (err) {
+        console.error("Error fetching SIM card type:", err);
+      }
+    };
+    fetchCarrier();
+  }, []);
 
   const handleCancel = () => {
     navigate("/simcard-list");
@@ -98,36 +126,44 @@ export default function SimCardFormComponent({ isEdit = false }) {
       <h1>{formTitle}</h1>
       <div className="form-wrapper">
         <form className="form-container">
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="carrier" className="form-label text-primary">
-                SIM card carrier
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="carrier"
-                name="carrier"
-                value={simCard.carrier || ""}
-                onChange={handleChange}
-              />
-            </div>
+          <div className="col-md-6">
+            <label htmlFor="simCardCarrier" className="form-label text-success">
+              Carrier
+            </label>
+            <select
+              className="form-select"
+              id="simCardCarrier"
+              name="simCardCarrier"
+              value={simCard.simCardCarrier}
+              onChange={handleChange}
+            >
+              <option value="">Select carrier</option>
+              {simCardCarrier.map((simCardCarrier) => (
+                <option key={simCardCarrier.id} value={simCardCarrier.name}>
+                  {simCardCarrier}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="type" className="form-label text-success">
-                SIM card type
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="type"
-                name="type"
-                value={simCard.type || ""}
-                onChange={handleChange}
-              />
-            </div>
+          <div className="col-md-6">
+            <label htmlFor="simCardType" className="form-label text-success">
+              Bus Type
+            </label>
+            <select
+              className="form-select"
+              id="simCardType"
+              name="simCardType"
+              value={simCard.type}
+              onChange={handleChange}
+            >
+              <option value="">Select SIM card type</option>
+              {simCardType.map((simCardType) => (
+                <option key={simCardType.id} value={simCardType.name}>
+                  {simCardType}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group-row">

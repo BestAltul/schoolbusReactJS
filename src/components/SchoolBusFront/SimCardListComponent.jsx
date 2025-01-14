@@ -14,7 +14,8 @@ export default function SimCardListComponent() {
   const fetchSimCardList = async () => {
     try {
       const response = await axios.get(BASE_URL_simcard);
-      setRadioList(response.data);
+      console.log("List ", response.data);
+      setSimCardList(response.data);
       setLoading(false);
     } catch (err) {
       setError(err);
@@ -39,6 +40,14 @@ export default function SimCardListComponent() {
       alert("Error marking simCard for deletion: " + err.message);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className="container">
@@ -103,9 +112,9 @@ export default function SimCardListComponent() {
                   color: element.markedForDeletion ? "gray" : "inherit",
                 }}
               >
-                <td>{element.Number || "Not available"}</td>
-                <td>{element.Carrier || "Not available"}</td>
-                <td>{element.Type || "Not available"}</td>
+                <td>{element.simCardNumber || "Not available"}</td>
+                <td>{element.simCardCarrier || "Not available"}</td>
+                <td>{element.simCardType || "Not available"}</td>
               </tr>
             ))}
           </tbody>

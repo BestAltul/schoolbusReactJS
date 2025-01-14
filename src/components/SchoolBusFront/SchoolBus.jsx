@@ -144,7 +144,7 @@ export default function SchoolBus() {
               path="/simcard-edit/:number"
               element={
                 <AuthenticatedRoute>
-                  <RadioFormComponent isEdit={true} />
+                  <SimCardFormComponent isEdit={true} />
                 </AuthenticatedRoute>
               }
             />
