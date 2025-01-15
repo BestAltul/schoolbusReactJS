@@ -2,9 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchDashCamByDRID from "../hooks/useFetchDashCamByDRID";
+import useFetchData from "../hooks/useFetchData";
 import cameraButton from "../../assets/images/camera-button.png";
+import Select from "react-select";
 
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
+const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
 
 export default function DashCamFormComponent({ isEdit = false }) {
   const { drid } = useParams();
@@ -18,6 +21,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
+    simCard: "",
   });
 
   const [dashcam, setDashcam] = useState({
@@ -25,6 +29,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
+    simCard: "",
   });
 
   const {
@@ -32,6 +37,8 @@ export default function DashCamFormComponent({ isEdit = false }) {
     loading,
     error,
   } = useFetchDashCamByDRID(BASE_URL_dashcam, drid);
+
+  const [simCards, setSimCards] = useState([]);
 
   useEffect(() => {
     if (isEdit && fetchedDashcam) {
@@ -41,6 +48,18 @@ export default function DashCamFormComponent({ isEdit = false }) {
     }
   }, [fetchedDashcam, isEdit]);
 
+  const {
+    data: fetchedSimCard,
+    simCardloading,
+    simCardError,
+  } = useFetchData(BASE_URL_simcard);
+
+  useEffect(() => {
+    if (fetchedSimCard) {
+      setSimCards(fetchedSimCard);
+    }
+  }, [fetchedSimCard]);
+
   const handleCancel = () => {
     navigate("/camera_list");
   };
@@ -48,6 +67,10 @@ export default function DashCamFormComponent({ isEdit = false }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setDashcam((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSelectChange = (selectedOption) => {
+    setDashcam((prevData) => ({ ...prevData, simCard: selectedOption }));
   };
 
   const getUpdatedFields = (original, updated) => {
@@ -73,7 +96,6 @@ export default function DashCamFormComponent({ isEdit = false }) {
           alert("Dashcam details updated successfully!");
         }
       } else {
-        console.log("Перед сохранением ", dashcam);
         await axios.post(`${BASE_URL_dashcam}`, dashcam);
         alert("New dashcam added successfully!");
       }
@@ -90,6 +112,15 @@ export default function DashCamFormComponent({ isEdit = false }) {
   if (error) {
     return <p style={{ color: "red" }}>Error: {error.message}</p>;
   }
+
+  const simCardOptions = simCards?.map((simcard) => ({
+    value: simcard.id,
+    label: `{simcard.simCardNumber}-{simcard.carrier}`,
+  }));
+
+  const selectedSimCard = simCardOptions?.find(
+    (option) => option.value === dashcam.simCard
+  );
 
   return (
     <div className="container">
@@ -140,6 +171,22 @@ export default function DashCamFormComponent({ isEdit = false }) {
                 name="imei"
                 value={dashcam.imei || ""}
                 onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="form-group-row">
+            <div className="col-md-6">
+              <label htmlFor="simCard" className="form-label text-warning">
+                SIM Card
+              </label>
+              <Select
+                id="simCard"
+                name="simCard"
+                options={simCardOptions}
+                value={selectedSimCard}
+                onChange={handleSelectChange}
+                placeholder="Select a SIM card"
               />
             </div>
           </div>

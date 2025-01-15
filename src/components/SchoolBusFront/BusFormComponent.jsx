@@ -1,4 +1,5 @@
 import axios from "axios";
+import Select from "react-select";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchData from "../hooks/useFetchData";
@@ -19,7 +20,7 @@ export default function BusFormComponent({ isEdit = false }) {
     name: "",
     terminal: "",
     dashCamera: { id: "", name: "", simCard: "", imei: "" },
-    radio: "",
+    radio: { name: "", imei: "" },
     version: "",
     markedForDeletion: "",
   });
@@ -66,13 +67,16 @@ export default function BusFormComponent({ isEdit = false }) {
           const response = await axios.get(`${BASE_URL}/${name}`);
           const bus = response.data;
 
-          console.log("response ", response.data);
+          console.log("busData return:", bus);
 
           setBusData({
             ...bus,
             dashCamera: bus.dashCamDTO
               ? { id: bus.dashCamDTO.drid, name: bus.dashCamDTO.name }
               : { id: "", name: "" },
+            radio: bus.radioDTO
+              ? { imei: bus.radioDTO.imei, name: bus.radioDTO.name }
+              : { imei: "", name: "" },
           });
 
           setOriginalBusData(bus);
@@ -87,15 +91,20 @@ export default function BusFormComponent({ isEdit = false }) {
     }, [name, isEdit]);
   }
 
-  console.log("Dasss", busData);
+  console.log("busData.radio:", busData.radio);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "dashCamera" || name === "radio") {
+    if (name === "dashCamera") {
       setBusData((prevData) => ({
         ...prevData,
         dashCamera: { ...prevData.dashCamera, id: value },
+      }));
+    } else if (name === "radio") {
+      setBusData((prevData) => ({
+        ...prevData,
+        radio: { ...prevData.radio, imei: value },
       }));
     } else {
       setBusData((prevData) => ({
@@ -118,6 +127,13 @@ export default function BusFormComponent({ isEdit = false }) {
         if (updatedFields.terminal) {
           await axios.patch(`${BASE_URL}/${name}`, {
             terminal: updatedFields.terminal,
+          });
+        }
+
+        if (updatedFields.radio) {
+          console.log("updated ", updatedFields);
+          await axios.patch(`${BASE_URL}/${name}`, {
+            radioDTO: { imei: updatedFields.radio.imei },
           });
         }
 
@@ -145,11 +161,27 @@ export default function BusFormComponent({ isEdit = false }) {
 
   const getUpdatedFields = (original, updated) => {
     const changes = {};
+
     for (const key in updated) {
       if (updated[key] !== original[key]) {
-        changes[key] = updated[key];
+        if (typeof updated[key] === "object" && updated[key] !== null) {
+          const nestedChanges = {};
+
+          for (const nestedKey in updated[key]) {
+            if (updated[key][nestedKey] !== original[key]?.[nestedKey]) {
+              nestedChanges[nestedKey] = updated[key][nestedKey];
+            }
+          }
+
+          if (Object.keys(nestedChanges).length > 0) {
+            changes[key] = nestedChanges;
+          }
+        } else {
+          changes[key] = updated[key];
+        }
       }
     }
+
     return changes;
   };
 
@@ -159,6 +191,24 @@ export default function BusFormComponent({ isEdit = false }) {
 
   if (loading) return <p>Loading bus data...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+
+  const dashcamOptions = dashcams?.map((dashcam) => ({
+    value: dashcam.drid,
+    label: `${dashcam.drid}-${dashcam.name}`,
+  }));
+
+  const selectedDashcam = dashcams?.find(
+    (dashCam) => dashCam.drid === busData.dashCamera.id
+  );
+
+  const radioOptions = radios?.map((radio) => ({
+    value: radio.imei,
+    label: `${radio.imei}-${radio.name}`,
+  }));
+
+  const selectedRadio = radios?.find(
+    (radio) => radio.imei === busData.radio.imei
+  );
 
   return (
     <div className="container">
@@ -228,41 +278,62 @@ export default function BusFormComponent({ isEdit = false }) {
                 <label htmlFor="dashCamera" className="form-label text-danger">
                   Dashcam
                 </label>
-                <select
-                  className="form-select"
+                <Select
                   id="dashCamera"
                   name="dashCamera"
-                  value={busData.dashCamera.id}
-                  onChange={handleChange}
-                >
-                  <option value="">Select dashcam</option>
-                  {dashcams &&
-                    dashcams.map((dashCam) => (
-                      <option key={dashCam.drid} value={dashCam.drid}>
-                        {dashCam.drid}
-                      </option>
-                    ))}
-                </select>
+                  value={
+                    selectedDashcam
+                      ? {
+                          value: selectedDashcam.drid,
+                          label: `${selectedDashcam.drid} - ${selectedDashcam.name}`,
+                        }
+                      : null
+                  }
+                  onChange={(selectedOption) =>
+                    setBusData((prevData) => ({
+                      ...prevData,
+                      dashCamera: {
+                        ...prevData.dashCamera,
+                        id: selectedOption.value,
+                      },
+                    }))
+                  }
+                  options={dashcamOptions}
+                  getOptionLabel={(option) => option.label}
+                  getOptionValue={(option) => option.value}
+                  placeholder="Search Dashcam..."
+                />
               </div>
               <div className="col-md-6">
                 <label htmlFor="radio" className="form-label text-info">
                   Radio
                 </label>
-                <select
-                  className="form-select"
+
+                <Select
                   id="radio"
                   name="radio"
-                  value={busData.radio.id}
-                  onChange={handleChange}
-                >
-                  <option value="">Select radio</option>
-                  {radios &&
-                    radios.map((radio) => (
-                      <option key={radio.id} value={radio.id}>
-                        {radio.name}
-                      </option>
-                    ))}
-                </select>
+                  value={
+                    selectedRadio
+                      ? {
+                          value: selectedRadio.imei,
+                          label: `${selectedRadio.imei} - ${selectedRadio.name}`,
+                        }
+                      : null
+                  }
+                  onChange={(selectedOption) =>
+                    setBusData((prevData) => ({
+                      ...prevData,
+                      radio: {
+                        ...prevData.radio,
+                        imei: selectedOption.value,
+                      },
+                    }))
+                  }
+                  options={radioOptions}
+                  getOptionLabel={(option) => option.label}
+                  getOptionValue={(option) => option.value}
+                  placeholder="Search Radio..."
+                />
               </div>
             </div>
           </div>

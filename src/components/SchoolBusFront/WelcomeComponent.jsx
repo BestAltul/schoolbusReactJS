@@ -3,6 +3,8 @@ import schoolBusImage from "../../assets/images/school-bus-button.png";
 import cameraButton from "../../assets/images/camera-button.png";
 import radioButton from "../../assets/images/radio-button.png";
 import simcardButton from "../../assets/images/SimCard-button.png";
+import dotButton from "../../assets/images/dot-inspection.png";
+import dispatcherButton from "../../assets/images/dispatcher-button.png";
 
 export default function WelcomeComponent() {
   const { username } = useParams();
@@ -25,6 +27,14 @@ export default function WelcomeComponent() {
         <Link to="/simcard-list" className="card">
           <img src={simcardButton} alt="Radio" className="card-icon" />
           <p>Manage your SIM card list</p>
+        </Link>
+        <Link to="/dot-list" className="card">
+          <img src={dotButton} alt="Radio" className="card-icon" />
+          <p>Manage your DOT inspections</p>
+        </Link>
+        <Link to="/dispatcher" className="card">
+          <img src={dispatcherButton} alt="dispatcher" className="card-icon" />
+          <p>Dispatcher</p>
         </Link>
       </div>
     </div>
