@@ -21,7 +21,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
-    simCard: "",
+    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const [dashcam, setDashcam] = useState({
@@ -29,7 +29,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
-    simCard: "",
+    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const {
@@ -115,7 +115,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
 
   const simCardOptions = simCards?.map((simcard) => ({
     value: simcard.id,
-    label: `{simcard.simCardNumber}-{simcard.carrier}`,
+    label: `${simcard.simCardNumber}-${simcard.carrier}`,
   }));
 
   const selectedSimCard = simCardOptions?.find(

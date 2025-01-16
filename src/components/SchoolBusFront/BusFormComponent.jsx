@@ -67,8 +67,6 @@ export default function BusFormComponent({ isEdit = false }) {
           const response = await axios.get(`${BASE_URL}/${name}`);
           const bus = response.data;
 
-          console.log("busData return:", bus);
-
           setBusData({
             ...bus,
             dashCamera: bus.dashCamDTO
