@@ -96,6 +96,11 @@ export default function DashCameraComponent() {
                 <td>{element.name}</td>
                 <td>{element.drid}</td>
                 <td>{element.imei}</td>
+                <td>
+                  {element.simCardDTO
+                    ? element.simCardDTO.simCardNumber
+                    : "Not available"}
+                </td>
                 <td
                   onClick={() =>
                     handleSimCardHistory(`Sim card: ${element.simCardHistory}`)

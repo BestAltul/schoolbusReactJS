@@ -22,6 +22,8 @@ export default function RadioListComponent() {
     }
   };
 
+  console.log("Radio lost get ", radiolist);
+
   useEffect(() => {
     fetchRadioList();
   }, []);
@@ -105,7 +107,7 @@ export default function RadioListComponent() {
               >
                 <td>{element.name || "Not available"}</td>
                 <td>{element.imei || "Not available"}</td>
-                <td>{element.simcardDTO || "Not available"}</td>
+                <td>{element.simCard ? element.simCard : "Not available"}</td>
               </tr>
             ))}
           </tbody>

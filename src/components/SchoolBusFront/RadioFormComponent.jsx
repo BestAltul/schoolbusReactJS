@@ -4,8 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetchRadio from "../hooks/useFetchData";
 import useFetchRadioByIMEI from "../hooks/useFetchRadioByIMEI";
 import radioButton from "../../assets/images/radio-button.png";
+import useFetchData from "../hooks/useFetchData";
+import Select from "react-select";
 
 const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
+const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
 
 export default function RadioFormComponent({ isEdit = false }) {
   const [formTitle, setFormTitle] = useState(
@@ -14,18 +17,21 @@ export default function RadioFormComponent({ isEdit = false }) {
 
   const { imei } = useParams();
 
+  const [simCards, setSimCards] = useState([]);
+
   const navigate = useNavigate();
 
   const [originalRadio, setOriginalRadio] = useState({
     name: "",
     imei: "",
-    simcard: "",
+    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const [radio, setRadio] = useState({
     name: "",
     imei: "",
     simcard: "",
+    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const {
@@ -33,6 +39,18 @@ export default function RadioFormComponent({ isEdit = false }) {
     loading,
     error,
   } = useFetchRadioByIMEI(BASE_URL_radio, imei);
+
+  const {
+    data: fetchedSimCard,
+    simCardloading,
+    simCardError,
+  } = useFetchData(BASE_URL_simcard);
+
+  useEffect(() => {
+    if (fetchedSimCard) {
+      setSimCards(fetchedSimCard);
+    }
+  }, [fetchedSimCard]);
 
   useEffect(() => {
     if (isEdit && fetchedRadio) {
@@ -50,6 +68,13 @@ export default function RadioFormComponent({ isEdit = false }) {
     navigate("/radio_list");
   };
 
+  const handleSelectChange = (selectedOption) => {
+    setRadio((prevData) => ({
+      ...prevData,
+      simCardDTO: { ...prevData.simCard, simCardNumber: selectedOption.value },
+    }));
+  };
+
   const getUpdatedFields = (original, updated) => {
     const changes = {};
     for (const key in updated) {
@@ -57,6 +82,9 @@ export default function RadioFormComponent({ isEdit = false }) {
         changes[key] = updated[key];
       }
     }
+
+    console.log("changes ", changes);
+
     return changes;
   };
 
@@ -64,6 +92,8 @@ export default function RadioFormComponent({ isEdit = false }) {
     try {
       if (isEdit) {
         const updatedFields = getUpdatedFields(originalRadio, radio);
+
+        console.log(updatedFields);
 
         if (Object.keys(updatedFields).length > 0) {
           await axios.patch(`${BASE_URL_radio}/${radio.imei}`, updatedFields);
@@ -86,6 +116,15 @@ export default function RadioFormComponent({ isEdit = false }) {
   if (error) {
     return <p style={{ color: "red" }}>Error: {error.message}</p>;
   }
+
+  const simCardOptions = simCards?.map((simcard) => ({
+    value: simcard.simCardNumber,
+    label: `${simcard.simCardNumber}-${simcard.carrier}`,
+  }));
+
+  const selectedSimCard = simCardOptions?.find(
+    (option) => option.value === radio.simCard
+  );
 
   return (
     <div className="container">
@@ -126,16 +165,16 @@ export default function RadioFormComponent({ isEdit = false }) {
 
           <div className="form-group-row">
             <div className="col-md-6">
-              <label htmlFor="simcard" className="form-label text-info">
-                Sim card
+              <label htmlFor="simCard" className="form-label text-warning">
+                SIM Card
               </label>
-              <input
-                type="text"
-                className="form-control"
-                id="imei"
-                name="simcard"
-                value={radio.simcard || ""}
-                onChange={handleChange}
+              <Select
+                id="simCard"
+                name="simCard"
+                options={simCardOptions}
+                value={selectedSimCard}
+                onChange={handleSelectChange}
+                placeholder="Select a SIM card"
               />
             </div>
           </div>

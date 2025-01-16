@@ -70,7 +70,10 @@ export default function DashCamFormComponent({ isEdit = false }) {
   };
 
   const handleSelectChange = (selectedOption) => {
-    setDashcam((prevData) => ({ ...prevData, simCard: selectedOption }));
+    setDashcam((prevData) => ({
+      ...prevData,
+      simCardDTO: { ...prevData.simCard, simCardNumber: selectedOption.value },
+    }));
   };
 
   const getUpdatedFields = (original, updated) => {
@@ -80,6 +83,9 @@ export default function DashCamFormComponent({ isEdit = false }) {
         changes[key] = updated[key];
       }
     }
+
+    console.log("changes ", changes);
+
     return changes;
   };
 
@@ -114,7 +120,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
   }
 
   const simCardOptions = simCards?.map((simcard) => ({
-    value: simcard.id,
+    value: simcard.simCardNumber,
     label: `${simcard.simCardNumber}-${simcard.carrier}`,
   }));
 
