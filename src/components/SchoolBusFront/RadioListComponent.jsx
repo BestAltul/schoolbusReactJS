@@ -1,28 +1,30 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./SearchBar";
 import "./SchoolBus.css";
 const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
 
 export default function RadioListComponent() {
   const [selectedRadio, setSelectedRadio] = useState(null);
   const [radiolist, setRadioList] = useState([]);
+  const [filteredRadiolist, setFilteredRadioList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const fetchRadioList = async () => {
     try {
       const response = await axios.get(BASE_URL_radio);
       setRadioList(response.data);
+      setFilteredRadioList(response.data);
       setLoading(false);
     } catch (err) {
       setError(err);
       setLoading(false);
     }
   };
-
-  console.log("Radio lost get ", radiolist);
 
   useEffect(() => {
     fetchRadioList();
@@ -39,6 +41,21 @@ export default function RadioListComponent() {
       fetchRadioList();
     } catch (err) {
       alert("Error marking radio for deletion: " + err.message);
+    }
+  };
+
+  const handleSearch = (query) => {
+    if (query) {
+      const filtered = radiolist.filter(
+        (element) =>
+          element.name.toLowerCase().includes(query.toLowerCase()) ||
+          element.imei.toLowerCase().includes(query.toLowerCase()) ||
+          (element.simCard &&
+            element.simCard.toLowerCase().includes(query.toLowerCase()))
+      );
+      setFilteredRadioList(filtered);
+    } else {
+      setFilteredRadioList(radiolist);
     }
   };
 
@@ -66,7 +83,7 @@ export default function RadioListComponent() {
           className="btn btn-danger"
           onClick={() => {
             if (selectedRadio) {
-              handleDeleteBus(selectedRadio.imei);
+              handleDeleteRadio(selectedRadio.imei);
             } else {
               alert("Please select a radio to delete.");
             }
@@ -75,6 +92,13 @@ export default function RadioListComponent() {
           Delete radio
         </button>
       </div>
+
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholder="Search by Name, IMEI, or SIM Card..."
+        onSearch={handleSearch}
+      />
 
       <div>
         <table className="table table-hover">
@@ -86,16 +110,14 @@ export default function RadioListComponent() {
             </tr>
           </thead>
           <tbody>
-            {radiolist.map((element) => (
+            {filteredRadiolist.map((element) => (
               <tr
                 key={element.name}
                 onClick={() => {
                   setSelectedRadio(element);
                 }}
                 className={
-                  selectedRadio?.name === element.name
-                    ? "smtc-selected-row"
-                    : ""
+                  selectedRadio?.name === element.name ? "table-active" : ""
                 }
                 style={{
                   cursor: "pointer",

@@ -77,3 +77,13 @@ footer {
   gap: 10px;
   margin-top: 10px;
 }
+
+input::placeholder {
+  color: #ff5733; /* Ярко-оранжевый цвет */
+  font-weight: bold; /* Сделать текст жирным */
+}
+
+.search-input::placeholder {
+  color: #ff5733; /* Ярко-оранжевый цвет */
+  font-weight: bold; /* Сделать текст жирным */
+}

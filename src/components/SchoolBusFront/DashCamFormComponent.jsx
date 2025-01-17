@@ -16,6 +16,8 @@ export default function DashCamFormComponent({ isEdit = false }) {
   );
   const navigate = useNavigate();
 
+  const [simCards, setSimCards] = useState([]);
+
   const [originalDashcamData, setOriginalDashcamData] = useState({
     id: "",
     name: "",
@@ -29,7 +31,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
-    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCardDTO: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const {
@@ -38,12 +40,13 @@ export default function DashCamFormComponent({ isEdit = false }) {
     error,
   } = useFetchDashCamByDRID(BASE_URL_dashcam, drid);
 
-  const [simCards, setSimCards] = useState([]);
-
   useEffect(() => {
     if (isEdit && fetchedDashcam) {
-      console.log("Fetched dashcam data before setting state:", fetchedDashcam);
-      setDashcam(fetchedDashcam);
+      setDashcam((prevData) => ({
+        ...fetchedDashcam,
+        simCardDTO: { ...fetchedDashcam.simCard },
+      }));
+
       setOriginalDashcamData(fetchedDashcam);
     }
   }, [fetchedDashcam, isEdit]);
@@ -69,6 +72,8 @@ export default function DashCamFormComponent({ isEdit = false }) {
     setDashcam((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  console.log("dashcam2 ", fetchedDashcam);
+
   const handleSelectChange = (selectedOption) => {
     setDashcam((prevData) => ({
       ...prevData,
@@ -83,8 +88,6 @@ export default function DashCamFormComponent({ isEdit = false }) {
         changes[key] = updated[key];
       }
     }
-
-    console.log("changes ", changes);
 
     return changes;
   };
@@ -125,7 +128,8 @@ export default function DashCamFormComponent({ isEdit = false }) {
   }));
 
   const selectedSimCard = simCardOptions?.find(
-    (option) => option.value === dashcam.simCard
+    (option) =>
+      String(option.value) === String(fetchedDashcam.simCardDTO?.simCardNumber)
   );
 
   return (

@@ -103,7 +103,7 @@ export default function BusListComponent() {
                   //console.log("Selected row:", element);
                 }}
                 className={
-                  selectedBus?.name === element.name ? "smtc-selected-row" : ""
+                  selectedBus?.name === element.name ? "table-active" : ""
                 }
                 style={{
                   cursor: "pointer",

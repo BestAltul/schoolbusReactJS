@@ -1,36 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "./SchoolBus.css";
+import SearchBar from "./SearchBar";
 import useFetch from "../hooks/useFetchData";
+import axios from "axios";
 
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 
 export default function DashCameraComponent() {
-  const [simCardHistory, setSimCardHistory] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
   const [selectedDashcam, setSelectedDashcam] = useState(null);
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredDashcams, setFilteredDashcams] = useState([]);
   const { data: dashCameras, loading, error } = useFetch(BASE_URL_dashcam);
+  const navigate = useNavigate();
 
-  const handleSimCardHistory = (content) => {
-    setSimCardHistory(content);
-    setShowModal(true);
+  const handleSearchDashcams = (query) => {
+    if (query) {
+      const filtered = dashCameras.filter((camera) => {
+        const lowerCaseQuery = query.toLowerCase();
+
+        return (
+          camera.name.toLowerCase().includes(lowerCaseQuery) ||
+          camera.drid.toLowerCase().includes(lowerCaseQuery) ||
+          camera.imei.toLowerCase().includes(lowerCaseQuery) ||
+          (camera.simCardDTO &&
+            camera.simCardDTO.simCardNumber
+              .toLowerCase()
+              .includes(lowerCaseQuery))
+        );
+      });
+      setFilteredDashcams(filtered);
+    } else {
+      setFilteredDashcams(dashCameras);
+    }
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  useEffect(() => {
+    if (dashCameras) {
+      setFilteredDashcams(dashCameras);
+    }
+  }, [dashCameras]);
 
   const handleAddDashcam = () => {
-    navigate("/new_dashcam");
+    navigate("/new_dashcam"); // Переход на страницу добавления Dashcam
   };
 
-  const handleDeleteDashcam = () => {
-    try {
-    } catch (err) {}
+  const handleEditDashcam = () => {
+    if (selectedDashcam) {
+      navigate(`/dashcam-edit/${selectedDashcam.drid}`); // Переход на страницу редактирования Dashcam
+    } else {
+      alert("Please select a Dashcam to edit.");
+    }
+  };
+
+  const handleDeleteDashcam = async () => {
+    if (selectedDashcam) {
+      try {
+        // Пример запроса на удаление Dashcam
+        await axios.delete(`${BASE_URL_dashcam}/${selectedDashcam.drid}`);
+        alert("Dashcam deleted successfully.");
+        setFilteredDashcams(
+          filteredDashcams.filter((d) => d.drid !== selectedDashcam.drid)
+        );
+      } catch (error) {
+        alert("Error deleting Dashcam: " + error.message);
+      }
+    } else {
+      alert("Please select a Dashcam to delete.");
+    }
   };
 
   if (loading) {
@@ -43,104 +79,60 @@ export default function DashCameraComponent() {
 
   return (
     <div>
-      <h1>Dash cameras</h1>
+      <h1>Dash Cameras</h1>
 
+      {/* Панель кнопок */}
       <div className="panel">
         <button className="btn btn-primary" onClick={handleAddDashcam}>
-          Add New dashcam
+          Add New Dashcam
         </button>
-        <button
-          className="btn btn-secondary"
-          onClick={() => {
-            if (selectedDashcam) {
-              navigate(`/dashcam-edit/${selectedDashcam.drid}`);
-            } else {
-              alert("Please select a dashcam to edit.");
-            }
-          }}
-        >
+        <button className="btn btn-secondary" onClick={handleEditDashcam}>
           Edit Dashcam
         </button>
-        <button
-          className="btn btn-danger"
-          onClick={() => {
-            if (selectedDashcam) {
-              handleDeleteDashcam(selectedDashcam.drid);
-            } else {
-              alert("Please select a dashcam to delete.");
-            }
-          }}
-        >
+        <button className="btn btn-danger" onClick={handleDeleteDashcam}>
           Delete Dashcam
         </button>
       </div>
-      <div>
-        <table className="table smtc-table-hover">
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>DRID</td>
-              <td>IMEI</td>
-              <td>Sim Card number</td>
-              <td>Sim Card history</td>
-            </tr>
-          </thead>
-          <tbody>
-            {dashCameras.map((element) => (
-              <tr
-                key={element.drid}
-                onClick={() => {
-                  setSelectedDashcam(element);
-                }}
-              >
-                <td>{element.name}</td>
-                <td>{element.drid}</td>
-                <td>{element.imei}</td>
-                <td>
-                  {element.simCardDTO
-                    ? element.simCardDTO.simCardNumber
-                    : "Not available"}
-                </td>
-                <td
-                  onClick={() =>
-                    handleSimCardHistory(`Sim card: ${element.simCardHistory}`)
-                  }
-                >
-                  {element.simCardHistory}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
-      {showModal && (
-        <div className="modal show d-block" tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Details</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={handleCloseModal}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <p>{simCardHistory}</p>
-              </div>
-              <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={handleCloseModal}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Компонент поиска */}
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholder="Search ..."
+        onSearch={handleSearchDashcams}
+      />
+
+      {/* Таблица с отфильтрованными камерами */}
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>DRID</th>
+            <th>IMEI</th>
+            <th>Sim Card number</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredDashcams.map((camera) => (
+            <tr
+              key={camera.drid}
+              onClick={() => setSelectedDashcam(camera)}
+              className={
+                selectedDashcam?.drid === camera.drid ? "table-active" : ""
+              }
+            >
+              <td>{camera.name}</td>
+              <td>{camera.drid}</td>
+              <td>{camera.imei}</td>
+              <td>
+                {camera.simCardDTO
+                  ? camera.simCardDTO.simCardNumber
+                  : "Not available"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
