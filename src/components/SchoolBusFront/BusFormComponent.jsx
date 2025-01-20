@@ -19,8 +19,8 @@ export default function BusFormComponent({ isEdit = false }) {
   const [busData, setBusData] = useState({
     name: "",
     terminal: "",
-    dashCamera: { id: "", name: "", simCard: "", imei: "" },
-    radio: { name: "", imei: "" },
+    dashCamDTO: { id: "", name: "", simCard: "", imei: "" },
+    radioDTO: { name: "", imei: "" },
     version: "",
     markedForDeletion: "",
   });
@@ -29,7 +29,7 @@ export default function BusFormComponent({ isEdit = false }) {
     name: "",
     terminal: "",
     dashCamDTO: "",
-    radio: "",
+    radioDTO: "",
     version: "",
     markedForDeletion: "",
   });
@@ -69,10 +69,10 @@ export default function BusFormComponent({ isEdit = false }) {
 
           setBusData({
             ...bus,
-            dashCamera: bus.dashCamDTO
+            dashCamDTO: bus.dashCamDTO
               ? { id: bus.dashCamDTO.drid, name: bus.dashCamDTO.name }
               : { id: "", name: "" },
-            radio: bus.radioDTO
+            radioDTO: bus.radioDTO
               ? { imei: bus.radioDTO.imei, name: bus.radioDTO.name }
               : { imei: "", name: "" },
           });
@@ -89,20 +89,18 @@ export default function BusFormComponent({ isEdit = false }) {
     }, [name, isEdit]);
   }
 
-  console.log("busData.radio:", busData.radio);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "dashCamera") {
+    if (name === "dashCamDTO") {
       setBusData((prevData) => ({
         ...prevData,
-        dashCamera: { ...prevData.dashCamera, id: value },
+        dashCamDTO: { ...prevData.dashCamDTO, id: value },
       }));
     } else if (name === "radio") {
       setBusData((prevData) => ({
         ...prevData,
-        radio: { ...prevData.radio, imei: value },
+        radioDTO: { ...prevData.radioDTO, imei: value },
       }));
     } else {
       setBusData((prevData) => ({
@@ -128,20 +126,20 @@ export default function BusFormComponent({ isEdit = false }) {
           });
         }
 
-        if (updatedFields.radio) {
-          console.log("updated ", updatedFields);
+        if (updatedFields.radioDTO) {
           await axios.patch(`${BASE_URL}/${name}`, {
-            radioDTO: { imei: updatedFields.radio.imei },
+            radioDTO: { imei: updatedFields.radioDTO.imei },
           });
         }
 
-        if (updatedFields.dashCamera) {
+        if (updatedFields.dashCamDTO) {
           await axios.patch(`${BASE_URL}/${name}`, {
-            dashCamDTO: { drid: updatedFields.dashCamera.id },
+            dashCamDTO: { drid: updatedFields.dashCamDTO.id },
           });
         }
         alert("Bus details updated successfully!");
       } else {
+        console.log("Pered so ", busData);
         await axios.post(`${BASE_URL}`, busData);
         alert("Bus details updated successfully!");
       }
@@ -196,7 +194,7 @@ export default function BusFormComponent({ isEdit = false }) {
   }));
 
   const selectedDashcam = dashcams?.find(
-    (dashCam) => dashCam.drid === busData.dashCamera.id
+    (dashCam) => dashCam.drid === busData.dashCamDTO.drid
   );
 
   const radioOptions = radios?.map((radio) => ({
@@ -205,7 +203,7 @@ export default function BusFormComponent({ isEdit = false }) {
   }));
 
   const selectedRadio = radios?.find(
-    (radio) => radio.imei === busData.radio.imei
+    (radio) => radio.imei === busData.radioDTO.imei
   );
 
   return (
@@ -273,12 +271,12 @@ export default function BusFormComponent({ isEdit = false }) {
           <div className="form-group-row">
             <div className="row">
               <div className="col-md-6">
-                <label htmlFor="dashCamera" className="form-label text-danger">
+                <label htmlFor="dashCamDTO" className="form-label text-danger">
                   Dashcam
                 </label>
                 <Select
-                  id="dashCamera"
-                  name="dashCamera"
+                  id="dashCamDTO"
+                  name="dashCamDTO"
                   value={
                     selectedDashcam
                       ? {
@@ -290,9 +288,9 @@ export default function BusFormComponent({ isEdit = false }) {
                   onChange={(selectedOption) =>
                     setBusData((prevData) => ({
                       ...prevData,
-                      dashCamera: {
-                        ...prevData.dashCamera,
-                        id: selectedOption.value,
+                      dashCamDTO: {
+                        ...prevData.dashCamDTO,
+                        drid: selectedOption.value,
                       },
                     }))
                   }
@@ -308,8 +306,8 @@ export default function BusFormComponent({ isEdit = false }) {
                 </label>
 
                 <Select
-                  id="radio"
-                  name="radio"
+                  id="radioDTO"
+                  name="radioDTO"
                   value={
                     selectedRadio
                       ? {
@@ -321,8 +319,8 @@ export default function BusFormComponent({ isEdit = false }) {
                   onChange={(selectedOption) =>
                     setBusData((prevData) => ({
                       ...prevData,
-                      radio: {
-                        ...prevData.radio,
+                      radioDTO: {
+                        ...prevData.radioDTO,
                         imei: selectedOption.value,
                       },
                     }))

@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SchoolBus.css";
+import SearchBar from "./SearchBar";
+
 const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
 
 export default function SimCardListComponent() {
@@ -9,6 +11,8 @@ export default function SimCardListComponent() {
   const [simCardList, setSimCardList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filteredSimCardlist, setFilteredSimCardlist] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   const fetchSimCardList = async () => {
@@ -16,6 +20,7 @@ export default function SimCardListComponent() {
       const response = await axios.get(BASE_URL_simcard);
       console.log("List ", response.data);
       setSimCardList(response.data);
+      setFilteredSimCardlist(response.data);
       setLoading(false);
     } catch (err) {
       setError(err);
@@ -48,6 +53,20 @@ export default function SimCardListComponent() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
+
+  const handleSearch = (query) => {
+    if (query) {
+      const filtered = simCardList.filter(
+        (element) =>
+          element.simCardType.toLowerCase().includes(query.toLowerCase()) ||
+          element.simCardCarrier.toLowerCase().includes(query.toLowerCase()) ||
+          element.simCardNumber.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredSimCardlist(filtered);
+    } else {
+      setFilteredSimCardlist(simCardList);
+    }
+  };
 
   return (
     <div className="container">
@@ -82,26 +101,31 @@ export default function SimCardListComponent() {
           Delete SIM card
         </button>
       </div>
-
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholder="Search by number, carrier, or type..."
+        onSearch={handleSearch}
+      />
       <div>
         <table className="table table-hover">
           <thead>
             <tr>
-              <td>Carrier</td>
               <td>Number</td>
+              <td>Carrier</td>
               <td>Type</td>
             </tr>
           </thead>
           <tbody>
-            {simCardList.map((element) => (
+            {filteredSimCardlist.map((element) => (
               <tr
-                key={element.Number}
+                key={element.simCardNumber}
                 onClick={() => {
                   setSelectedSimCard(element);
                 }}
                 className={
-                  setSelectedSimCard?.Number === element.Number
-                    ? "smtc-selected-row"
+                  selectedSimCard?.simCardNumber === element.simCardNumber
+                    ? "table-active"
                     : ""
                 }
                 style={{

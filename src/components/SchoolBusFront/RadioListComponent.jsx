@@ -20,6 +20,7 @@ export default function RadioListComponent() {
       setRadioList(response.data);
       setFilteredRadioList(response.data);
       setLoading(false);
+      console.log("poluchennay ", response.data);
     } catch (err) {
       setError(err);
       setLoading(false);
@@ -50,8 +51,10 @@ export default function RadioListComponent() {
         (element) =>
           element.name.toLowerCase().includes(query.toLowerCase()) ||
           element.imei.toLowerCase().includes(query.toLowerCase()) ||
-          (element.simCard &&
-            element.simCard.toLowerCase().includes(query.toLowerCase()))
+          (element.simCardDTO &&
+            element.simCardDTO.simCardNumber
+              .toLowerCase()
+              .includes(query.toLowerCase()))
       );
       setFilteredRadioList(filtered);
     } else {
@@ -129,7 +132,11 @@ export default function RadioListComponent() {
               >
                 <td>{element.name || "Not available"}</td>
                 <td>{element.imei || "Not available"}</td>
-                <td>{element.simCard ? element.simCard : "Not available"}</td>
+                <td>
+                  {element.simCardDTO.simCardNumber
+                    ? element.simCardDTO.simCardNumber
+                    : "Not available"}
+                </td>
               </tr>
             ))}
           </tbody>

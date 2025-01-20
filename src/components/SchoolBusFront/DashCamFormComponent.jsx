@@ -57,6 +57,8 @@ export default function DashCamFormComponent({ isEdit = false }) {
     simCardError,
   } = useFetchData(BASE_URL_simcard);
 
+  console.log("fetchedSimCard ", fetchedSimCard);
+
   useEffect(() => {
     if (fetchedSimCard) {
       setSimCards(fetchedSimCard);
@@ -71,8 +73,6 @@ export default function DashCamFormComponent({ isEdit = false }) {
     const { name, value } = e.target;
     setDashcam((prevData) => ({ ...prevData, [name]: value }));
   };
-
-  console.log("dashcam2 ", fetchedDashcam);
 
   const handleSelectChange = (selectedOption) => {
     setDashcam((prevData) => ({
@@ -105,6 +105,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
           alert("Dashcam details updated successfully!");
         }
       } else {
+        console.log(dashcam);
         await axios.post(`${BASE_URL_dashcam}`, dashcam);
         alert("New dashcam added successfully!");
       }
@@ -129,7 +130,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
 
   const selectedSimCard = simCardOptions?.find(
     (option) =>
-      String(option.value) === String(fetchedDashcam.simCardDTO?.simCardNumber)
+      String(option.value) === String(fetchedDashcam?.simCardDTO?.simCardNumber)
   );
 
   return (

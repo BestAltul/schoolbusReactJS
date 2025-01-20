@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SchoolBus.css";
+import SearchBar from "./SearchBar";
+
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
 
 export default function BusListComponent() {
@@ -16,6 +18,10 @@ export default function BusListComponent() {
   const [buslist, setBusList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [filteredBusList, setFilteredBusList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const navigate = useNavigate();
 
   const fetchBusList = async () => {
@@ -23,9 +29,9 @@ export default function BusListComponent() {
       const response = await axios.get(
         "http://localhost:8080/api/v3/schoolbus-management"
       );
-      console.log(" My data: ", response.data);
       setBusList(response.data);
       setLoading(false);
+      setFilteredBusList(response.data);
     } catch (err) {
       setError(err);
       setLoading(false);
@@ -47,6 +53,29 @@ export default function BusListComponent() {
       fetchBusList();
     } catch (err) {
       alert("Error marking bus for deletion: " + err.message);
+    }
+  };
+
+  const handleSearch = (query) => {
+    if (query) {
+      const filtered = buslist.filter((element) => {
+        return (
+          element.name.toLowerCase().includes(query.toLowerCase()) ||
+          element.busType.toLowerCase().includes(query.toLowerCase()) ||
+          (element.dashCamDTO?.drid &&
+            element.dashCamDTO.drid
+              .toLowerCase()
+              .includes(query.toLowerCase())) ||
+          (element.radioDTO?.name &&
+            element.radioDTO.name
+              .toLowerCase()
+              .includes(query.toLowerCase())) ||
+          element.terminal.toLowerCase().includes(query.toLowerCase())
+        );
+      });
+      setFilteredBusList(filtered);
+    } else {
+      setFilteredBusList(buslist);
     }
   };
 
@@ -83,7 +112,12 @@ export default function BusListComponent() {
           Delete Bus
         </button>
       </div>
-
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholder="Search by..."
+        onSearch={handleSearch}
+      />
       <div>
         <table className="table table-hover">
           <thead>
@@ -95,12 +129,11 @@ export default function BusListComponent() {
             </tr>
           </thead>
           <tbody>
-            {buslist.map((element) => (
+            {filteredBusList.map((element) => (
               <tr
                 key={element.name}
                 onClick={() => {
                   setSelectedBus(element);
-                  //console.log("Selected row:", element);
                 }}
                 className={
                   selectedBus?.name === element.name ? "table-active" : ""

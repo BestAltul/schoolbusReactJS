@@ -24,14 +24,13 @@ export default function RadioFormComponent({ isEdit = false }) {
   const [originalRadio, setOriginalRadio] = useState({
     name: "",
     imei: "",
-    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCardDTO: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const [radio, setRadio] = useState({
     name: "",
     imei: "",
-    simcard: "",
-    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCardDTO: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const {
@@ -51,6 +50,8 @@ export default function RadioFormComponent({ isEdit = false }) {
       setSimCards(fetchedSimCard);
     }
   }, [fetchedSimCard]);
+
+  console.log("Pol ", fetchedSimCard);
 
   useEffect(() => {
     if (isEdit && fetchedRadio) {
@@ -82,9 +83,6 @@ export default function RadioFormComponent({ isEdit = false }) {
         changes[key] = updated[key];
       }
     }
-
-    console.log("changes ", changes);
-
     return changes;
   };
 
@@ -93,13 +91,12 @@ export default function RadioFormComponent({ isEdit = false }) {
       if (isEdit) {
         const updatedFields = getUpdatedFields(originalRadio, radio);
 
-        console.log(updatedFields);
-
         if (Object.keys(updatedFields).length > 0) {
           await axios.patch(`${BASE_URL_radio}/${radio.imei}`, updatedFields);
           alert("Radio details updated successfully!");
         }
       } else {
+        console.log("radio pered ", radio);
         await axios.post(`${BASE_URL_radio}`, radio);
         alert("New radio added successfully!");
       }
@@ -123,7 +120,7 @@ export default function RadioFormComponent({ isEdit = false }) {
   }));
 
   const selectedSimCard = simCardOptions?.find(
-    (option) => option.value === radio.simCard
+    (option) => option.value === radio.simCardDTO.simCardNumber
   );
 
   return (
@@ -169,8 +166,8 @@ export default function RadioFormComponent({ isEdit = false }) {
                 SIM Card
               </label>
               <Select
-                id="simCard"
-                name="simCard"
+                id="simCardDTO"
+                name="simCardDTO"
                 options={simCardOptions}
                 value={selectedSimCard}
                 onChange={handleSelectChange}

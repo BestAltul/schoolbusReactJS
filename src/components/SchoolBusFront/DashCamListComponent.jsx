@@ -55,7 +55,6 @@ export default function DashCameraComponent() {
   const handleDeleteDashcam = async () => {
     if (selectedDashcam) {
       try {
-        // Пример запроса на удаление Dashcam
         await axios.delete(`${BASE_URL_dashcam}/${selectedDashcam.drid}`);
         alert("Dashcam deleted successfully.");
         setFilteredDashcams(
@@ -81,7 +80,6 @@ export default function DashCameraComponent() {
     <div>
       <h1>Dash Cameras</h1>
 
-      {/* Панель кнопок */}
       <div className="panel">
         <button className="btn btn-primary" onClick={handleAddDashcam}>
           Add New Dashcam
@@ -94,7 +92,6 @@ export default function DashCameraComponent() {
         </button>
       </div>
 
-      {/* Компонент поиска */}
       <SearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -102,7 +99,6 @@ export default function DashCameraComponent() {
         onSearch={handleSearchDashcams}
       />
 
-      {/* Таблица с отфильтрованными камерами */}
       <table className="table">
         <thead>
           <tr>
