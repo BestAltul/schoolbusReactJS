@@ -5,6 +5,7 @@ import radioButton from "../../assets/images/radio-button.png";
 import simcardButton from "../../assets/images/SimCard-button.png";
 import dotButton from "../../assets/images/dot-inspection.png";
 import dispatcherButton from "../../assets/images/dispatcher-button.png";
+import settingsButton from "../../assets/images/settings-button.png";
 
 export default function WelcomeComponent() {
   const { username } = useParams();
@@ -35,6 +36,10 @@ export default function WelcomeComponent() {
         <Link to="/dispatcher" className="card">
           <img src={dispatcherButton} alt="dispatcher" className="card-icon" />
           <p>Dispatcher</p>
+        </Link>
+        <Link to="/settings" className="card">
+          <img src={settingsButton} alt="settings" className="card-icon" />
+          <p>Settings</p>
         </Link>
       </div>
     </div>

@@ -10,6 +10,7 @@ import RadioListComponent from "./RadioListComponent";
 import RadioFormComponent from "./RadioFormComponent";
 import SimCardListComponent from "./SimCardListComponent";
 import SimCardFormComponent from "./SimCardFormComponent";
+import SettingsFormComponent from "./SettingsFormComponent";
 import "./SchoolBus.css";
 import "./Welcome.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
@@ -145,6 +146,14 @@ export default function SchoolBus() {
               element={
                 <AuthenticatedRoute>
                   <SimCardFormComponent isEdit={true} />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <AuthenticatedRoute>
+                  <SettingsFormComponent />
                 </AuthenticatedRoute>
               }
             />
