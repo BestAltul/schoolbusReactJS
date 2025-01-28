@@ -52,10 +52,7 @@ export default function SettingsFormComponent() {
         },
       }));
 
-      await axios.post(
-        "http://localhost:8080/api/v3/schoolbus-management",
-        buses
-      );
+      await axios.post("http://localhost:8080/api/v3/upload-management", buses);
 
       alert("Data sent successfully!");
     } catch (err) {
