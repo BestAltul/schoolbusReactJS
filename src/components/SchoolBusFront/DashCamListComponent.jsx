@@ -41,12 +41,12 @@ export default function DashCameraComponent() {
   }, [dashCameras]);
 
   const handleAddDashcam = () => {
-    navigate("/new_dashcam"); // Переход на страницу добавления Dashcam
+    navigate("/new_dashcam");
   };
 
   const handleEditDashcam = () => {
     if (selectedDashcam) {
-      navigate(`/dashcam-edit/${selectedDashcam.drid}`); // Переход на страницу редактирования Dashcam
+      navigate(`/dashcam-edit/${selectedDashcam.drid}`);
     } else {
       alert("Please select a Dashcam to edit.");
     }
