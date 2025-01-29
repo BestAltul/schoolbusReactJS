@@ -34,9 +34,10 @@ export default function SettingsFormComponent() {
 
     try {
       const buses = data.map((item) => ({
-        name: item.Bus,
+        name: item.name,
         fleet: item.Fleet,
-        DashCamDTO: {
+        busType: "BIGBUS",
+        dashCamDTO: {
           drid: item.drid,
           imei: item.imei,
           simCardDTO: {
