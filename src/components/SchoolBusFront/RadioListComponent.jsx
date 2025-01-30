@@ -115,7 +115,7 @@ export default function RadioListComponent() {
           <tbody>
             {filteredRadiolist.map((element) => (
               <tr
-                key={element.name}
+                key={element.imei}
                 onClick={() => {
                   setSelectedRadio(element);
                 }}
@@ -133,9 +133,7 @@ export default function RadioListComponent() {
                 <td>{element.name || "Not available"}</td>
                 <td>{element.imei || "Not available"}</td>
                 <td>
-                  {element.simCardDTO.simCardNumber
-                    ? element.simCardDTO.simCardNumber
-                    : "Not available"}
+                  {element.simCardDTO ? element.simCardDTO : "Not available"}
                 </td>
               </tr>
             ))}
