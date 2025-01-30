@@ -14,20 +14,24 @@ export default function DashCameraComponent() {
   const navigate = useNavigate();
 
   const handleSearchDashcams = (query) => {
-    if (query) {
-      const filtered = dashCameras.filter((camera) => {
-        const lowerCaseQuery = query.toLowerCase();
+    if (!dashCameras || dashCameras.length === 0) return; // Проверка наличия данных
 
+    if (query) {
+      const lowerCaseQuery = query.toLowerCase();
+
+      const filtered = dashCameras.filter((camera) => {
         return (
-          camera.name.toLowerCase().includes(lowerCaseQuery) ||
-          camera.drid.toLowerCase().includes(lowerCaseQuery) ||
-          camera.imei.toLowerCase().includes(lowerCaseQuery) ||
+          (camera.name && camera.name.toLowerCase().includes(lowerCaseQuery)) ||
+          (camera.drid && camera.drid.toLowerCase().includes(lowerCaseQuery)) ||
+          (camera.imei && camera.imei.toLowerCase().includes(lowerCaseQuery)) ||
           (camera.simCardDTO &&
+            camera.simCardDTO.simCardNumber &&
             camera.simCardDTO.simCardNumber
               .toLowerCase()
               .includes(lowerCaseQuery))
         );
       });
+
       setFilteredDashcams(filtered);
     } else {
       setFilteredDashcams(dashCameras);
@@ -98,37 +102,38 @@ export default function DashCameraComponent() {
         placeholder="Search ..."
         onSearch={handleSearchDashcams}
       />
-
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>DRID</th>
-            <th>IMEI</th>
-            <th>Sim Card number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredDashcams.map((camera) => (
-            <tr
-              key={camera.drid}
-              onClick={() => setSelectedDashcam(camera)}
-              className={
-                selectedDashcam?.drid === camera.drid ? "table-active" : ""
-              }
-            >
-              <td>{camera.name}</td>
-              <td>{camera.drid}</td>
-              <td>{camera.imei}</td>
-              <td>
-                {camera.simCardDTO
-                  ? camera.simCardDTO.simCardNumber
-                  : "Not available"}
-              </td>
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>DRID</th>
+              <th>IMEI</th>
+              <th>Sim Card number</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredDashcams.map((camera) => (
+              <tr
+                key={camera.drid}
+                onClick={() => setSelectedDashcam(camera)}
+                className={
+                  selectedDashcam?.drid === camera.drid ? "table-active" : ""
+                }
+              >
+                <td>{camera.name}</td>
+                <td>{camera.drid}</td>
+                <td>{camera.imei}</td>
+                <td>
+                  {camera.simCardDTO
+                    ? camera.simCardDTO.simCardNumber
+                    : "Not available"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

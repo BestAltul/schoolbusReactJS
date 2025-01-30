@@ -79,11 +79,45 @@ footer {
 }
 
 input::placeholder {
-  color: #ff5733; /* Ярко-оранжевый цвет */
-  font-weight: bold; /* Сделать текст жирным */
+  color: #ff5733;
+  font-weight: bold;
 }
 
 .search-input::placeholder {
-  color: #ff5733; /* Ярко-оранжевый цвет */
-  font-weight: bold; /* Сделать текст жирным */
+  color: #ff5733;
+  font-weight: bold;
+}
+
+/* header and footer for all list forms*/
+.table-container {
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.table-active {
+  background-color: #d3e0ff !important;
 }

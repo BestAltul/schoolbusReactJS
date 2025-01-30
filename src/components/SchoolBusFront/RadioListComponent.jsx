@@ -103,7 +103,7 @@ export default function RadioListComponent() {
         onSearch={handleSearch}
       />
 
-      <div>
+      <div className="table-container">
         <table className="table table-hover">
           <thead>
             <tr>

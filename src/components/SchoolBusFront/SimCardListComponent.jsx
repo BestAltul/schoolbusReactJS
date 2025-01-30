@@ -55,13 +55,28 @@ export default function SimCardListComponent() {
   }
 
   const handleSearch = (query) => {
+    console.log("Search query:", query);
+    console.log("SimCard list before filtering:", simCardList);
+
+    if (!simCardList || simCardList.length === 0) {
+      console.warn("No data to filter");
+      return;
+    }
+
     if (query) {
-      const filtered = simCardList.filter(
-        (element) =>
-          element.simCardType.toLowerCase().includes(query.toLowerCase()) ||
-          element.simCardCarrier.toLowerCase().includes(query.toLowerCase()) ||
-          element.simCardNumber.toLowerCase().includes(query.toLowerCase())
-      );
+      const lowerQuery = query.toLowerCase();
+      const filtered = simCardList.filter((element) => {
+        return (
+          (element.simCardType &&
+            element.simCardType.toLowerCase().includes(lowerQuery)) ||
+          (element.simCardCarrier &&
+            element.simCardCarrier.toLowerCase().includes(lowerQuery)) ||
+          (element.simCardNumber &&
+            element.simCardNumber.toLowerCase().includes(lowerQuery))
+        );
+      });
+
+      console.log("Filtered results:", filtered);
       setFilteredSimCardlist(filtered);
     } else {
       setFilteredSimCardlist(simCardList);
@@ -107,7 +122,7 @@ export default function SimCardListComponent() {
         placeholder="Search by number, carrier, or type..."
         onSearch={handleSearch}
       />
-      <div>
+      <div className="table-container">
         <table className="table table-hover">
           <thead>
             <tr>

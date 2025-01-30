@@ -57,22 +57,23 @@ export default function BusListComponent() {
   };
 
   const handleSearch = (query) => {
+    if (!buslist || buslist.length === 0) return;
+
     if (query) {
+      const lowerCaseQuery = query.toLowerCase();
+
       const filtered = buslist.filter((element) => {
-        return (
-          element.name.toLowerCase().includes(query.toLowerCase()) ||
-          element.busType.toLowerCase().includes(query.toLowerCase()) ||
-          (element.dashCamDTO?.drid &&
-            element.dashCamDTO.drid
-              .toLowerCase()
-              .includes(query.toLowerCase())) ||
-          (element.radioDTO?.name &&
-            element.radioDTO.name
-              .toLowerCase()
-              .includes(query.toLowerCase())) ||
-          element.terminal.toLowerCase().includes(query.toLowerCase())
-        );
+        const matches = [
+          element.name?.toLowerCase().includes(lowerCaseQuery),
+          element.busType?.toLowerCase().includes(lowerCaseQuery),
+          element.dashCamDTO?.drid?.toLowerCase().includes(lowerCaseQuery),
+          element.radioDTO?.name?.toLowerCase().includes(lowerCaseQuery),
+          element.terminal?.toLowerCase().includes(lowerCaseQuery),
+        ];
+
+        return matches.some(Boolean);
       });
+
       setFilteredBusList(filtered);
     } else {
       setFilteredBusList(buslist);
@@ -118,7 +119,7 @@ export default function BusListComponent() {
         placeholder="Search by..."
         onSearch={handleSearch}
       />
-      <div>
+      <div className="table-container">
         <table className="table table-hover">
           <thead>
             <tr>
