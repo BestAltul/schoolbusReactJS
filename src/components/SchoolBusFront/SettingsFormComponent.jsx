@@ -40,8 +40,13 @@ export default function SettingsFormComponent() {
         dashCamDTO: {
           drid: item.drid,
           imei: item.imei,
+          // drid: "test",
+          // imei: "12345678",
+
           simCardDTO: {
-            simCardNumber: item.dashCamSim,
+            simCardNumber: item.solidSimCard
+              ? item.solidSimCard
+              : item.dashCamSim,
           },
         },
         radioDTO: {
@@ -61,6 +66,7 @@ export default function SettingsFormComponent() {
       setError(err);
     } finally {
       setLoading(false);
+      console.log(buses);
     }
   };
 
