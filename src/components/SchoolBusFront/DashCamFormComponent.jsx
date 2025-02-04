@@ -105,7 +105,6 @@ export default function DashCamFormComponent({ isEdit = false }) {
           alert("Dashcam details updated successfully!");
         }
       } else {
-        console.log(dashcam);
         await axios.post(`${BASE_URL_dashcam}`, dashcam);
         alert("New dashcam added successfully!");
       }

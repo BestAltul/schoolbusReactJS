@@ -20,7 +20,6 @@ export default function RadioListComponent() {
       setRadioList(response.data);
       setFilteredRadioList(response.data);
       setLoading(false);
-      console.log("poluchennay ", response.data);
     } catch (err) {
       setError(err);
       setLoading(false);
@@ -130,10 +129,12 @@ export default function RadioListComponent() {
                   color: element.markedForDeletion ? "gray" : "inherit",
                 }}
               >
-                <td>{element.name || "Not available"}</td>
-                <td>{element.imei || "Not available"}</td>
+                <td>{element.name ? element.name : "Not available"}</td>
+                <td>{element.imei ? element.imei : "Not available"}</td>
                 <td>
-                  {element.simCardDTO ? element.simCardDTO : "Not available"}
+                  {element.simCardDTO
+                    ? element.simCardDTO.simCardNumber
+                    : "Not available"}
                 </td>
               </tr>
             ))}

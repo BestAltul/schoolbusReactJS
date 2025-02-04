@@ -18,7 +18,6 @@ export default function SimCardListComponent() {
   const fetchSimCardList = async () => {
     try {
       const response = await axios.get(BASE_URL_simcard);
-      console.log("List ", response.data);
       setSimCardList(response.data);
       setFilteredSimCardlist(response.data);
       setLoading(false);
@@ -55,9 +54,6 @@ export default function SimCardListComponent() {
   }
 
   const handleSearch = (query) => {
-    console.log("Search query:", query);
-    console.log("SimCard list before filtering:", simCardList);
-
     if (!simCardList || simCardList.length === 0) {
       console.warn("No data to filter");
       return;

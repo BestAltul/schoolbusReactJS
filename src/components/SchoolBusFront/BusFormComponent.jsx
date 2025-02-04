@@ -70,8 +70,8 @@ export default function BusFormComponent({ isEdit = false }) {
           setBusData({
             ...bus,
             dashCamDTO: bus.dashCamDTO
-              ? { id: bus.dashCamDTO.drid, name: bus.dashCamDTO.name }
-              : { id: "", name: "" },
+              ? { drid: bus.dashCamDTO.drid, name: bus.dashCamDTO.imei }
+              : { drid: "", imei: "" },
             radioDTO: bus.radioDTO
               ? { imei: bus.radioDTO.imei, name: bus.radioDTO.name }
               : { imei: "", name: "" },
@@ -139,7 +139,6 @@ export default function BusFormComponent({ isEdit = false }) {
         }
         alert("Bus details updated successfully!");
       } else {
-        console.log("Pered so ", busData);
         await axios.post(`${BASE_URL}`, busData);
         alert("Bus details updated successfully!");
       }
@@ -281,7 +280,7 @@ export default function BusFormComponent({ isEdit = false }) {
                     selectedDashcam
                       ? {
                           value: selectedDashcam.drid,
-                          label: `${selectedDashcam.drid} - ${selectedDashcam.name}`,
+                          label: `${selectedDashcam.drid} - ${selectedDashcam.imei}`,
                         }
                       : null
                   }

@@ -17,14 +17,14 @@ export default function SimCardFormComponent({ isEdit = false }) {
 
   const [originalSimCardData, setOriginalSimCardData] = useState({
     id: "",
-    type: "",
+    simCardType: "",
     simCardCarrier: "",
     simCardNumber: "",
   });
 
   const [simCard, setSimCard] = useState({
     id: "",
-    type: "",
+    simCardType: "",
     simCardCarrier: "",
     simCardNumber: "",
   });
@@ -37,11 +37,11 @@ export default function SimCardFormComponent({ isEdit = false }) {
 
   useEffect(() => {
     if (isEdit && fetchedSimCard) {
-      console.log(
-        "Fetched SIM card data before setting state:",
-        fetchedSimCard
-      );
-      setSimCard(fetchedSimCard);
+      setSimCard({
+        simCardType: fetchedSimCard.simCardType,
+        simCardCarrier: fetchedSimCard.simCardCarrier,
+        simCardNumber: fetchedSimCard.simCardNumber,
+      });
       setOriginalSimCardData(fetchedSimCard);
     }
   }, [fetchedSimCard, isEdit]);
@@ -148,13 +148,13 @@ export default function SimCardFormComponent({ isEdit = false }) {
 
           <div className="col-md-6">
             <label htmlFor="simCardType" className="form-label text-success">
-              Bus Type
+              Sim card type
             </label>
             <select
               className="form-select"
               id="simCardType"
               name="simCardType"
-              value={simCard.type}
+              value={simCard.simCardType}
               onChange={handleChange}
             >
               <option value="">Select SIM card type</option>
