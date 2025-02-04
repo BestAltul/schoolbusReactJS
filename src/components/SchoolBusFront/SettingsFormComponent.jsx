@@ -35,7 +35,7 @@ export default function SettingsFormComponent() {
     try {
       const buses = data.map((item) => ({
         name: item.name,
-        fleet: item.Fleet,
+        terminal: item.fleet,
         busType: "BIGBUS",
         dashCamDTO: {
           drid: item.drid,
@@ -52,6 +52,8 @@ export default function SettingsFormComponent() {
           },
         },
       }));
+
+      console.log(buses);
 
       await axios.post("http://localhost:8080/api/v3/upload-management", buses);
 
