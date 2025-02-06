@@ -1,6 +1,8 @@
+import React, { useState, useEffect } from "react";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 import axios from "axios";
 import Select from "react-select";
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchData from "../hooks/useFetchData";
 import useFetchTerminals from "../hooks/useFetchTerminals";
@@ -9,6 +11,7 @@ import schoolBusImage from "../../assets/images/schoolbus.png";
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
+const BASE_URL_comments = "http://localhost:8080/api/v3/notes-management";
 
 export default function BusFormComponent({ isEdit = false }) {
   const { name } = useParams();
@@ -34,8 +37,10 @@ export default function BusFormComponent({ isEdit = false }) {
     markedForDeletion: "",
   });
 
-  const { data: dashcams, loading, error } = useFetchData(BASE_URL_dashcam);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
+  const { data: dashcams, loading, error } = useFetchData(BASE_URL_dashcam);
   const {
     data: terminals,
     terminalLoading,
@@ -60,8 +65,8 @@ export default function BusFormComponent({ isEdit = false }) {
     fetchBusType();
   }, []);
 
-  if (isEdit) {
-    useEffect(() => {
+  useEffect(() => {
+    if (isEdit) {
       const fetchBusData = async () => {
         try {
           const response = await axios.get(`${BASE_URL}/${name}`);
@@ -82,16 +87,24 @@ export default function BusFormComponent({ isEdit = false }) {
           console.error("Error fetching bus data:", err);
         }
       };
+      fetchBusData();
+    }
+  }, [name, isEdit]);
 
-      if (isEdit) {
-        fetchBusData();
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL_comments}/${name}`);
+        setComments(response.data);
+      } catch (err) {
+        console.error("Error fetching comments:", err);
       }
-    }, [name, isEdit]);
-  }
+    };
+    fetchComments();
+  }, [name]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "dashCamDTO") {
       setBusData((prevData) => ({
         ...prevData,
@@ -184,6 +197,22 @@ export default function BusFormComponent({ isEdit = false }) {
     navigate("/bus_list");
   };
 
+  const handleAddComment = async () => {
+    if (newComment.trim() === "") return;
+
+    try {
+      const response = await axios.post(`${BASE_URL_comments}`, {
+        busName: name,
+        comment: newComment,
+        userId: "admin",
+      });
+      setComments([...comments, response.data]);
+      setNewComment("");
+    } catch (err) {
+      console.error("Error adding comment:", err);
+    }
+  };
+
   if (loading) return <p>Loading bus data...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
@@ -210,128 +239,171 @@ export default function BusFormComponent({ isEdit = false }) {
       <h1>{formHeader}</h1>
       <div className="form-wrapper">
         <form className="form-container">
-          <div className="form-group-row">
-            <div className="row">
-              <div className="col-md-6">
-                <label htmlFor="name" className="form-label text-primary">
-                  Bus Number
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="name"
-                  name="name"
-                  value={busData.name}
-                  onChange={handleChange}
-                />
+          <Tabs>
+            <TabList>
+              <Tab>Bus Details</Tab>
+              <Tab>Comments</Tab>
+            </TabList>
+
+            <TabPanel>
+              <div className="form-group-row">
+                <div className="row">
+                  <div className="col-md-6">
+                    <label htmlFor="name" className="form-label text-primary">
+                      Bus Number
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      name="name"
+                      value={busData.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label
+                      htmlFor="busType"
+                      className="form-label text-success"
+                    >
+                      Bus Type
+                    </label>
+                    <select
+                      className="form-select"
+                      id="busType"
+                      name="busType"
+                      value={busData.busType}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Bus Type</option>
+                      {busType.map((busType) => (
+                        <option key={busType.id} value={busType.name}>
+                          {busType}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div className="col-md-6">
-                <label htmlFor="busType" className="form-label text-success">
-                  Bus Type
+
+              <div className="form-group-row">
+                <label htmlFor="terminal" className="form-label text-warning">
+                  Terminal
                 </label>
                 <select
                   className="form-select"
-                  id="busType"
-                  name="busType"
-                  value={busData.busType}
+                  id="terminal"
+                  name="terminal"
+                  value={busData.terminal}
                   onChange={handleChange}
                 >
-                  <option value="">Select Bus Type</option>
-                  {busType.map((busType) => (
-                    <option key={busType.id} value={busType.name}>
-                      {busType}
+                  <option value="">Select Terminal</option>
+                  {terminals.map((terminal) => (
+                    <option key={terminal.id} value={terminal.name}>
+                      {terminal}
                     </option>
                   ))}
                 </select>
               </div>
-            </div>
-          </div>
 
-          <div className="form-group-row">
-            <label htmlFor="terminal" className="form-label text-warning">
-              Terminal
-            </label>
-            <select
-              className="form-select"
-              id="terminal"
-              name="terminal"
-              value={busData.terminal}
-              onChange={handleChange}
-            >
-              <option value="">Select Terminal</option>
-              {terminals.map((terminal) => (
-                <option key={terminal.id} value={terminal.name}>
-                  {terminal}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group-row">
-            <div className="row">
-              <div className="col-md-6">
-                <label htmlFor="dashCamDTO" className="form-label text-danger">
-                  Dashcam
-                </label>
-                <Select
-                  id="dashCamDTO"
-                  name="dashCamDTO"
-                  value={
-                    selectedDashcam
-                      ? {
-                          value: selectedDashcam.drid,
-                          label: `${selectedDashcam.drid} - ${selectedDashcam.imei}`,
-                        }
-                      : null
-                  }
-                  onChange={(selectedOption) =>
-                    setBusData((prevData) => ({
-                      ...prevData,
-                      dashCamDTO: {
-                        ...prevData.dashCamDTO,
-                        drid: selectedOption.value,
-                      },
-                    }))
-                  }
-                  options={dashcamOptions}
-                  getOptionLabel={(option) => option.label}
-                  getOptionValue={(option) => option.value}
-                  placeholder="Search Dashcam..."
-                />
+              <div className="form-group-row">
+                <div className="row">
+                  <div className="col-md-6">
+                    <label
+                      htmlFor="dashCamDTO"
+                      className="form-label text-danger"
+                    >
+                      Dashcam
+                    </label>
+                    <Select
+                      id="dashCamDTO"
+                      name="dashCamDTO"
+                      value={
+                        selectedDashcam
+                          ? {
+                              value: selectedDashcam.drid,
+                              label: `${selectedDashcam.drid} - ${selectedDashcam.imei}`,
+                            }
+                          : null
+                      }
+                      onChange={(selectedOption) =>
+                        setBusData((prevData) => ({
+                          ...prevData,
+                          dashCamDTO: {
+                            ...prevData.dashCamDTO,
+                            drid: selectedOption.value,
+                          },
+                        }))
+                      }
+                      options={dashcamOptions}
+                      getOptionLabel={(option) => option.label}
+                      getOptionValue={(option) => option.value}
+                      placeholder="Search Dashcam..."
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="radio" className="form-label text-info">
+                      Radio
+                    </label>
+                    <Select
+                      id="radioDTO"
+                      name="radioDTO"
+                      value={
+                        selectedRadio
+                          ? {
+                              value: selectedRadio.imei,
+                              label: `${selectedRadio.imei} - ${selectedRadio.name}`,
+                            }
+                          : null
+                      }
+                      onChange={(selectedOption) =>
+                        setBusData((prevData) => ({
+                          ...prevData,
+                          radioDTO: {
+                            ...prevData.radioDTO,
+                            imei: selectedOption.value,
+                          },
+                        }))
+                      }
+                      options={radioOptions}
+                      getOptionLabel={(option) => option.label}
+                      getOptionValue={(option) => option.value}
+                      placeholder="Search Radio..."
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="col-md-6">
-                <label htmlFor="radio" className="form-label text-info">
-                  Radio
-                </label>
+            </TabPanel>
 
-                <Select
-                  id="radioDTO"
-                  name="radioDTO"
-                  value={
-                    selectedRadio
-                      ? {
-                          value: selectedRadio.imei,
-                          label: `${selectedRadio.imei} - ${selectedRadio.name}`,
-                        }
-                      : null
-                  }
-                  onChange={(selectedOption) =>
-                    setBusData((prevData) => ({
-                      ...prevData,
-                      radioDTO: {
-                        ...prevData.radioDTO,
-                        imei: selectedOption.value,
-                      },
-                    }))
-                  }
-                  options={radioOptions}
-                  getOptionLabel={(option) => option.label}
-                  getOptionValue={(option) => option.value}
-                  placeholder="Search Radio..."
-                />
+            <TabPanel>
+              <div className="comments-section">
+                <h2>Comments</h2>
+                <div>
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    rows={4}
+                    className="form-control"
+                    placeholder="Add a comment..."
+                  />
+                </div>
+                <button
+                  className="btn btn-primary mt-2"
+                  onClick={handleAddComment}
+                >
+                  Add Comment
+                </button>
+
+                <ul className="list-group mt-3">
+                  {comments.map((comment, index) => (
+                    <li key={index} className="list-group-item">
+                      {comment.comment}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          </div>
+            </TabPanel>
+          </Tabs>
         </form>
 
         <img src={schoolBusImage} alt="School Bus" className="bus-image" />
