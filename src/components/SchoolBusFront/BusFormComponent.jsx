@@ -202,7 +202,7 @@ export default function BusFormComponent({ isEdit = false }) {
 
     try {
       const response = await axios.post(`${BASE_URL_comments}`, {
-        busName: name,
+        schoolBus: { name: name },
         comment: newComment,
         userId: "admin",
       });
