@@ -397,7 +397,7 @@ export default function BusFormComponent({ isEdit = false }) {
                 <ul className="list-group mt-3">
                   {comments.map((comment, index) => (
                     <li key={index} className="list-group-item">
-                      {comment.comment}
+                      {comment.comment + " " + comment.createdAt}
                     </li>
                   ))}
                 </ul>
