@@ -121,3 +121,60 @@ input::placeholder {
 .table-active {
   background-color: #d3e0ff !important;
 }
+
+/* Note  comments */
+
+.comments-section {
+  background-color: #e5ddd5;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 10px 15px;
+  margin: 5px 0;
+  border-radius: 15px;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.sent {
+  background-color: #dcf8c6;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+.received {
+  background-color: #fff;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+
+.comment-timestamp {
+  font-size: 10px;
+  color: gray;
+  margin-top: 4px;
+  text-align: right;
+}
+
+textarea {
+  border-radius: 10px;
+  resize: none;
+  padding: 10px;
+}
+
+.btn-primary {
+  background-color: #075e54;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #128c7e;
+}

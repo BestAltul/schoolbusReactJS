@@ -206,7 +206,9 @@ export default function BusFormComponent({ isEdit = false }) {
         comment: newComment,
         userId: "admin",
       });
-      setComments([...comments, response.data]);
+      // setComments([...comments, response.data]);
+      // setNewComment("");
+      setComments((prevComments) => [...prevComments, response.data]);
       setNewComment("");
     } catch (err) {
       console.error("Error adding comment:", err);
@@ -382,25 +384,34 @@ export default function BusFormComponent({ isEdit = false }) {
                   <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    rows={4}
+                    rows={3}
                     className="form-control"
-                    placeholder="Add a comment..."
+                    placeholder="Type your message..."
                   />
                 </div>
                 <button
+                  type="button"
                   className="btn btn-primary mt-2"
                   onClick={handleAddComment}
                 >
-                  Add Comment
+                  Send
                 </button>
 
-                <ul className="list-group mt-3">
+                <div className="mt-3">
                   {comments.map((comment, index) => (
-                    <li key={index} className="list-group-item">
-                      {comment.comment + " " + comment.createdAt}
-                    </li>
+                    <div
+                      key={index}
+                      className={`message-bubble ${
+                        comment.userId === "admin" ? "sent" : "received"
+                      }`}
+                    >
+                      {comment.comment}
+                      <div className="comment-timestamp">
+                        {new Date(comment.createdAt).toLocaleString()}
+                      </div>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             </TabPanel>
           </Tabs>
