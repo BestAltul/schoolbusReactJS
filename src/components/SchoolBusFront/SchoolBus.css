@@ -125,7 +125,7 @@ input::placeholder {
 /* Note  comments */
 
 .comments-section {
-  background-color: #e5ddd5;
+  background-color: #e5e1d5;
   padding: 20px;
   border-radius: 10px;
   max-height: 400px;
@@ -171,10 +171,10 @@ textarea {
 }
 
 .btn-primary {
-  background-color: #075e54;
+  background-color: #0fd2bb;
   border: none;
 }
 
 .btn-primary:hover {
-  background-color: #128c7e;
+  background-color: #e3e31f;
 }

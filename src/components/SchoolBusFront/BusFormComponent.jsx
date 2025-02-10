@@ -7,11 +7,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import useFetchData from "../hooks/useFetchData";
 import useFetchTerminals from "../hooks/useFetchTerminals";
 import schoolBusImage from "../../assets/images/schoolbus.png";
+import CommentsComponent from "./CommentsComponent";
 
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
-const BASE_URL_comments = "http://localhost:8080/api/v3/notes-management";
 
 export default function BusFormComponent({ isEdit = false }) {
   const { name } = useParams();
@@ -90,18 +90,6 @@ export default function BusFormComponent({ isEdit = false }) {
       fetchBusData();
     }
   }, [name, isEdit]);
-
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL_comments}/${name}`);
-        setComments(response.data);
-      } catch (err) {
-        console.error("Error fetching comments:", err);
-      }
-    };
-    fetchComments();
-  }, [name]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -195,24 +183,6 @@ export default function BusFormComponent({ isEdit = false }) {
 
   const handleCancel = () => {
     navigate("/bus_list");
-  };
-
-  const handleAddComment = async () => {
-    if (newComment.trim() === "") return;
-
-    try {
-      const response = await axios.post(`${BASE_URL_comments}`, {
-        schoolBus: { name: name },
-        comment: newComment,
-        userId: "admin",
-      });
-      // setComments([...comments, response.data]);
-      // setNewComment("");
-      setComments((prevComments) => [...prevComments, response.data]);
-      setNewComment("");
-    } catch (err) {
-      console.error("Error adding comment:", err);
-    }
   };
 
   if (loading) return <p>Loading bus data...</p>;
@@ -378,41 +348,11 @@ export default function BusFormComponent({ isEdit = false }) {
             </TabPanel>
 
             <TabPanel>
-              <div className="comments-section">
-                <h2>Comments</h2>
-                <div>
-                  <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    rows={3}
-                    className="form-control"
-                    placeholder="Type your message..."
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-primary mt-2"
-                  onClick={handleAddComment}
-                >
-                  Send
-                </button>
-
-                <div className="mt-3">
-                  {comments.map((comment, index) => (
-                    <div
-                      key={index}
-                      className={`message-bubble ${
-                        comment.userId === "admin" ? "sent" : "received"
-                      }`}
-                    >
-                      {comment.comment}
-                      <div className="comment-timestamp">
-                        {new Date(comment.createdAt).toLocaleString()}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <CommentsComponent
+                entityId={name}
+                entityType="schoolBus"
+                apiUrl="http://localhost:8080/api/v3/notes-management"
+              />
             </TabPanel>
           </Tabs>
         </form>

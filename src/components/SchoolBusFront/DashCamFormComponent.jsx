@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchDashCamByDRID from "../hooks/useFetchDashCamByDRID";
 import useFetchData from "../hooks/useFetchData";
 import cameraButton from "../../assets/images/camera-button.png";
 import Select from "react-select";
+import CommentsComponent from "./CommentsComponent";
 
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
@@ -137,70 +140,86 @@ export default function DashCamFormComponent({ isEdit = false }) {
       <h1>{formTitle}</h1>
       <div className="form-wrapper">
         <form className="form-container">
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="name" className="form-label text-primary">
-                Dashcam Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                value={dashcam.name || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+          <Tabs>
+            <TabList>
+              <Tab>DashCam Details</Tab>
+              <Tab>Comments</Tab>
+            </TabList>
+            <TabPanel>
+              <div className="form-group-row">
+                <div className="col-md-6">
+                  <label htmlFor="name" className="form-label text-primary">
+                    Dashcam Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="name"
+                    name="name"
+                    value={dashcam.name || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="drid" className="form-label text-success">
-                DRID
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="drid"
-                name="drid"
-                value={dashcam.drid || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+              <div className="form-group-row">
+                <div className="col-md-6">
+                  <label htmlFor="drid" className="form-label text-success">
+                    DRID
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="drid"
+                    name="drid"
+                    value={dashcam.drid || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="imei" className="form-label text-info">
-                IMEI
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="imei"
-                name="imei"
-                value={dashcam.imei || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+              <div className="form-group-row">
+                <div className="col-md-6">
+                  <label htmlFor="imei" className="form-label text-info">
+                    IMEI
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="imei"
+                    name="imei"
+                    value={dashcam.imei || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="simCard" className="form-label text-warning">
-                SIM Card
-              </label>
-              <Select
-                id="simCard"
-                name="simCard"
-                options={simCardOptions}
-                value={selectedSimCard}
-                onChange={handleSelectChange}
-                placeholder="Select a SIM card"
+              <div className="form-group-row">
+                <div className="col-md-6">
+                  <label htmlFor="simCard" className="form-label text-warning">
+                    SIM Card
+                  </label>
+                  <Select
+                    id="simCard"
+                    name="simCard"
+                    options={simCardOptions}
+                    value={selectedSimCard}
+                    onChange={handleSelectChange}
+                    placeholder="Select a SIM card"
+                  />
+                </div>
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <CommentsComponent
+                entityId={dashcam.drid}
+                entityType="dashCamDTO"
+                apiUrl="http://localhost:8080/api/v3/notes-management"
               />
-            </div>
-          </div>
+            </TabPanel>
+          </Tabs>
         </form>
+
         <img src={cameraButton} alt="School Bus" className="camera" />
       </div>
 

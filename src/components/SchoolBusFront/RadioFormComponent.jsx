@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchRadio from "../hooks/useFetchData";
 import useFetchRadioByIMEI from "../hooks/useFetchRadioByIMEI";
 import radioButton from "../../assets/images/radio-button.png";
 import useFetchData from "../hooks/useFetchData";
 import Select from "react-select";
+import CommentsComponent from "./CommentsComponent";
 
 const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
 const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
@@ -128,53 +131,69 @@ export default function RadioFormComponent({ isEdit = false }) {
       <h1>{formTitle}</h1>
       <div className="form-wrapper">
         <form className="form-container">
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="name" className="form-label text-primary">
-                Radio Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                value={radio.name || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+          <Tabs>
+            <TabList>
+              <Tab>Radio Details</Tab>
+              <Tab>Comments</Tab>
+            </TabList>
+            <TabPanel>
+              <div className="form-group-row">
+                <div className="col-md-6">
+                  <label htmlFor="name" className="form-label text-primary">
+                    Radio Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="name"
+                    name="name"
+                    value={radio.name || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="imei" className="form-label text-success">
-                IMEI
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="imei"
-                name="imei"
-                value={radio.imei || ""}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+              <div className="form-group-row">
+                <div className="col-md-6">
+                  <label htmlFor="imei" className="form-label text-success">
+                    IMEI
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="imei"
+                    name="imei"
+                    value={radio.imei || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          <div className="form-group-row">
-            <div className="col-md-6">
-              <label htmlFor="simCard" className="form-label text-warning">
-                SIM Card
-              </label>
-              <Select
-                id="simCardDTO"
-                name="simCardDTO"
-                options={simCardOptions}
-                value={selectedSimCard}
-                onChange={handleSelectChange}
-                placeholder="Select a SIM card"
+              <div className="form-group-row">
+                <div className="col-md-6">
+                  <label htmlFor="simCard" className="form-label text-warning">
+                    SIM Card
+                  </label>
+                  <Select
+                    id="simCardDTO"
+                    name="simCardDTO"
+                    options={simCardOptions}
+                    value={selectedSimCard}
+                    onChange={handleSelectChange}
+                    placeholder="Select a SIM card"
+                  />
+                </div>
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <CommentsComponent
+                entityId={radio.imei}
+                devideDTO="deviceDTO"
+                deviceType="RADIO"
+                apiUrl="http://localhost:8080/api/v3/notes-management"
               />
-            </div>
-          </div>
+            </TabPanel>
+          </Tabs>
         </form>
         <img src={radioButton} alt="School Bus" className="camera" />
       </div>
