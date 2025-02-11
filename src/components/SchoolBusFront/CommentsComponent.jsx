@@ -8,7 +8,13 @@ export default function CommentsComponent({ entityId, entityType, apiUrl }) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/${entityId}`);
+        let url = `${apiUrl}/${entityId}`;
+
+        if (entityType === "dashCamDTO" || entityType === "radioDTO") {
+          url += `?deviceType=${entityType}`;
+        }
+
+        const response = await axios.get(url);
         console.log("get data ", response.data);
         setComments(response.data);
       } catch (err) {
@@ -34,10 +40,12 @@ export default function CommentsComponent({ entityId, entityType, apiUrl }) {
       if (entityType === "schoolBus") {
         payload.schoolBus = { name: entityId };
       } else if (entityType === "dashCamDTO") {
-        payload.daschCamDTO = { drid: entityId };
-        payload.deviceType = "DASHCAM";
+        payload.deviceDTO = { type: "dashcam", drid: entityId };
+        payload.deviceType = "dashCam";
+      } else if (entityType === "radioDTO") {
+        payload.deviceDTO = { type: "radio", imei: entityId };
+        payload.deviceType = "radio";
       }
-
       const response = await axios.post(apiUrl, payload);
 
       setComments((prevComments) => [...prevComments, response.data]);
