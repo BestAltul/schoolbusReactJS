@@ -36,12 +36,6 @@ export default function CommentsComponent({ entityId, entityType, apiUrl }) {
         createdAt: new Date().toISOString(),
       };
 
-      // let url = `${apiUrl}/${entityId}`;
-
-      // if (entityType === "dashCamDTO" || entityType === "radioDTO") {
-      //   url += `?deviceType=${entityType}`;
-      // }
-
       if (entityType === "schoolBus") {
         payload.schoolBus = { name: entityId };
       } else if (entityType === "dashCamDTO") {
@@ -51,6 +45,8 @@ export default function CommentsComponent({ entityId, entityType, apiUrl }) {
         payload.deviceDTO = { type: "radio", imei: entityId };
         payload.deviceType = "radio";
       }
+
+      console.log("payload", payload);
       const response = await axios.post(apiUrl, payload);
 
       setComments((prevComments) => [...prevComments, response.data]);

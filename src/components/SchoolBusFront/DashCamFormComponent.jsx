@@ -34,7 +34,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
-    simCardDTO: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const {
@@ -47,7 +47,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     if (isEdit && fetchedDashcam) {
       setDashcam((prevData) => ({
         ...fetchedDashcam,
-        simCardDTO: { ...fetchedDashcam.simCard },
+        simCard: { ...fetchedDashcam.simCard },
       }));
 
       setOriginalDashcamData(fetchedDashcam);
@@ -80,7 +80,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
   const handleSelectChange = (selectedOption) => {
     setDashcam((prevData) => ({
       ...prevData,
-      simCardDTO: { ...prevData.simCard, simCardNumber: selectedOption.value },
+      simCard: { ...prevData.simCard, simCardNumber: selectedOption.value },
     }));
   };
 
@@ -132,7 +132,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
 
   const selectedSimCard = simCardOptions?.find(
     (option) =>
-      String(option.value) === String(fetchedDashcam?.simCardDTO?.simCardNumber)
+      String(option.value) === String(fetchedDashcam?.simCard?.simCardNumber)
   );
 
   return (

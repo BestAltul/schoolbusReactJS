@@ -27,13 +27,13 @@ export default function RadioFormComponent({ isEdit = false }) {
   const [originalRadio, setOriginalRadio] = useState({
     name: "",
     imei: "",
-    simCardDTO: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const [radio, setRadio] = useState({
     name: "",
     imei: "",
-    simCardDTO: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
   const {
@@ -75,7 +75,7 @@ export default function RadioFormComponent({ isEdit = false }) {
   const handleSelectChange = (selectedOption) => {
     setRadio((prevData) => ({
       ...prevData,
-      simCardDTO: { ...prevData.simCard, simCardNumber: selectedOption.value },
+      simCard: { ...prevData.simCard, simCardNumber: selectedOption.value },
     }));
   };
 
@@ -123,7 +123,7 @@ export default function RadioFormComponent({ isEdit = false }) {
   }));
 
   const selectedSimCard = simCardOptions?.find(
-    (option) => option.value === radio.simCardDTO.simCardNumber
+    (option) => option.value === radio.simCard.simCardNumber
   );
 
   return (
@@ -175,8 +175,8 @@ export default function RadioFormComponent({ isEdit = false }) {
                     SIM Card
                   </label>
                   <Select
-                    id="simCardDTO"
-                    name="simCardDTO"
+                    id="simCard"
+                    name="simCard"
                     options={simCardOptions}
                     value={selectedSimCard}
                     onChange={handleSelectChange}
@@ -188,8 +188,7 @@ export default function RadioFormComponent({ isEdit = false }) {
             <TabPanel>
               <CommentsComponent
                 entityId={radio.imei}
-                devideDTO="deviceDTO"
-                deviceType="RADIO"
+                entityType="radioDTO"
                 apiUrl="http://localhost:8080/api/v3/notes-management"
               />
             </TabPanel>
