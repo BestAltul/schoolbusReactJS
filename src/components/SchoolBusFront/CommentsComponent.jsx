@@ -15,7 +15,6 @@ export default function CommentsComponent({ entityId, entityType, apiUrl }) {
         }
 
         const response = await axios.get(url);
-        console.log("get data ", response.data);
         setComments(response.data);
       } catch (err) {
         console.error("Error fetching comments:", err);
@@ -36,6 +35,12 @@ export default function CommentsComponent({ entityId, entityType, apiUrl }) {
         userId: "admin",
         createdAt: new Date().toISOString(),
       };
+
+      // let url = `${apiUrl}/${entityId}`;
+
+      // if (entityType === "dashCamDTO" || entityType === "radioDTO") {
+      //   url += `?deviceType=${entityType}`;
+      // }
 
       if (entityType === "schoolBus") {
         payload.schoolBus = { name: entityId };
