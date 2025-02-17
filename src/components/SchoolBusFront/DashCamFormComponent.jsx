@@ -26,6 +26,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
+    type: "",
     simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
@@ -34,6 +35,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
     name: "",
     drid: "",
     imei: "",
+    type: "dashcam",
     simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
@@ -59,8 +61,6 @@ export default function DashCamFormComponent({ isEdit = false }) {
     simCardloading,
     simCardError,
   } = useFetchData(BASE_URL_simcard);
-
-  console.log("fetchedSimCard ", fetchedSimCard);
 
   useEffect(() => {
     if (fetchedSimCard) {
@@ -99,11 +99,11 @@ export default function DashCamFormComponent({ isEdit = false }) {
     try {
       if (isEdit) {
         const updatedFields = getUpdatedFields(originalDashcamData, dashcam);
-
-        if (Object.keys(updatedFields).length > 0) {
+        const updatedFieldsWithType = { ...updatedFields, type: "dashcam" };
+        if (Object.keys(updatedFieldsWithType).length > 0) {
           await axios.patch(
             `${BASE_URL_dashcam}/${dashcam.drid}`,
-            updatedFields
+            updatedFieldsWithType
           );
           alert("Dashcam details updated successfully!");
         }

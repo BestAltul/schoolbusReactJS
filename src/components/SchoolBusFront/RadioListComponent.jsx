@@ -118,6 +118,7 @@ export default function RadioListComponent() {
                 onClick={() => {
                   setSelectedRadio(element);
                 }}
+                onDoubleClick={() => navigate(`/radio-edit/${element.imei}`)}
                 className={
                   selectedRadio?.name === element.name ? "table-active" : ""
                 }

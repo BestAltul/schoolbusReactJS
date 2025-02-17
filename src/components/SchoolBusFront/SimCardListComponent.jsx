@@ -134,6 +134,9 @@ export default function SimCardListComponent() {
                 onClick={() => {
                   setSelectedSimCard(element);
                 }}
+                onDoubleClick={() =>
+                  navigate(`/simcard-edit/${element.simCardNumber}`)
+                }
                 className={
                   selectedSimCard?.simCardNumber === element.simCardNumber
                     ? "table-active"

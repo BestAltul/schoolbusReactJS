@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState, useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
@@ -18,12 +19,33 @@ export default function BusFormComponent({ isEdit = false }) {
   const navigate = useNavigate();
   const [busType, setBusType] = useState([]);
   const [formHeader, setFormHeader] = useState(isEdit ? "Edit bus" : "New bus");
+  const queryClient = useQueryClient();
+
+  // const mutation = useMutation(
+  //   (busData) =>
+  //     isEdit
+  //       ? axios.patch(`${BASE_URL}/${name}`, busData)
+  //       : axios.post(BASE_URL, busData),
+  //   {
+  //     onSuccess: (data) => {
+  //       queryClient.setQueryData(["busList"], (oldData) => {
+  //         if (!oldData) return [data.data];
+
+  //         return isEdit
+  //           ? oldData.map((bus) => (bus.name === name ? data.data : bus))
+  //           : [...oldData, data.data];
+  //       });
+
+  //       navigate("/bus_list");
+  //     },
+  //   }
+  // );
 
   const [busData, setBusData] = useState({
     name: "",
     terminal: "",
-    dashCamDTO: { id: "", name: "", simCard: "", imei: "" },
-    radioDTO: { name: "", imei: "" },
+    dashCamDTO: { id: "", name: "", simCard: "", imei: "", type: "" },
+    radioDTO: { name: "", imei: "", type: "" },
     version: "",
     markedForDeletion: "",
   });
@@ -75,10 +97,18 @@ export default function BusFormComponent({ isEdit = false }) {
           setBusData({
             ...bus,
             dashCamDTO: bus.dashCamDTO
-              ? { drid: bus.dashCamDTO.drid, name: bus.dashCamDTO.imei }
+              ? {
+                  drid: bus.dashCamDTO.drid,
+                  name: bus.dashCamDTO.imei,
+                  type: "dashcam",
+                }
               : { drid: "", imei: "" },
             radioDTO: bus.radioDTO
-              ? { imei: bus.radioDTO.imei, name: bus.radioDTO.name }
+              ? {
+                  imei: bus.radioDTO.imei,
+                  name: bus.radioDTO.name,
+                  type: "radio",
+                }
               : { imei: "", name: "" },
           });
 
@@ -129,13 +159,13 @@ export default function BusFormComponent({ isEdit = false }) {
 
         if (updatedFields.radioDTO) {
           await axios.patch(`${BASE_URL}/${name}`, {
-            radioDTO: { imei: updatedFields.radioDTO.imei },
+            radioDTO: { imei: updatedFields.radioDTO.imei, type: "radio" },
           });
         }
 
         if (updatedFields.dashCamDTO) {
           await axios.patch(`${BASE_URL}/${name}`, {
-            dashCamDTO: { drid: updatedFields.dashCamDTO.id },
+            dashCamDTO: { drid: updatedFields.dashCamDTO.id, type: "dashcam" },
           });
         }
         alert("Bus details updated successfully!");

@@ -117,6 +117,7 @@ export default function DashCameraComponent() {
               <tr
                 key={camera.drid}
                 onClick={() => setSelectedDashcam(camera)}
+                onDoubleClick={() => navigate(`/dashcam-edit/${camera.drid}`)}
                 className={
                   selectedDashcam?.drid === camera.drid ? "table-active" : ""
                 }

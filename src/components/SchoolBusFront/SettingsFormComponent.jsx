@@ -40,10 +40,11 @@ export default function SettingsFormComponent() {
         dashCamDTO: {
           drid: item.drid,
           imei: item.imei,
+          type: "dashcam",
           // drid: "test",
           // imei: "12345678",
 
-          simCardDTO: {
+          simCard: {
             simCardNumber: item.solidSimCard
               ? item.solidSimCard
               : item.dashCamSim,
@@ -52,14 +53,14 @@ export default function SettingsFormComponent() {
         radioDTO: {
           imei: item.RadioIMEI,
           name: item.RadioSerialNumber,
-          simCardDTO: {
+          type: "radio",
+          simCard: {
             simCardNumber: item.RadioSim,
           },
         },
       }));
 
-      console.log(buses);
-
+      console.log("before sending", buses);
       await axios.post("http://localhost:8080/api/v3/upload-management", buses);
 
       alert("Data sent successfully!");
@@ -68,7 +69,7 @@ export default function SettingsFormComponent() {
       setError(err);
     } finally {
       setLoading(false);
-      console.log(buses);
+      //console.log(buses);
     }
   };
 

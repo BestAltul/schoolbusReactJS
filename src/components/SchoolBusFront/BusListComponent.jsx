@@ -136,6 +136,7 @@ export default function BusListComponent() {
                 onClick={() => {
                   setSelectedBus(element);
                 }}
+                onDoubleClick={() => navigate(`/edit/${element.name}`)}
                 className={
                   selectedBus?.name === element.name ? "table-active" : ""
                 }

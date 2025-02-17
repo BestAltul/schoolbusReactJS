@@ -27,12 +27,18 @@ export default function RadioFormComponent({ isEdit = false }) {
   const [originalRadio, setOriginalRadio] = useState({
     name: "",
     imei: "",
-    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    type: "",
+    simCard: {
+      simCardType: "",
+      simCardCarrier: "",
+      simCardNumber: "",
+    },
   });
 
   const [radio, setRadio] = useState({
     name: "",
     imei: "",
+    type: "",
     simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
   });
 
@@ -53,8 +59,6 @@ export default function RadioFormComponent({ isEdit = false }) {
       setSimCards(fetchedSimCard);
     }
   }, [fetchedSimCard]);
-
-  console.log("Pol ", fetchedSimCard);
 
   useEffect(() => {
     if (isEdit && fetchedRadio) {
@@ -93,13 +97,16 @@ export default function RadioFormComponent({ isEdit = false }) {
     try {
       if (isEdit) {
         const updatedFields = getUpdatedFields(originalRadio, radio);
-
+        const updatedFieldsWithType = { ...updatedFields, type: "radio" };
+        console.log(updatedFieldsWithType);
         if (Object.keys(updatedFields).length > 0) {
-          await axios.patch(`${BASE_URL_radio}/${radio.imei}`, updatedFields);
+          await axios.patch(
+            `${BASE_URL_radio}/${radio.imei}`,
+            updatedFieldsWithType
+          );
           alert("Radio details updated successfully!");
         }
       } else {
-        console.log("radio pered ", radio);
         await axios.post(`${BASE_URL_radio}`, radio);
         alert("New radio added successfully!");
       }
