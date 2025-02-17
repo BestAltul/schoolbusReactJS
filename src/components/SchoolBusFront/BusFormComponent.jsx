@@ -44,8 +44,10 @@ export default function BusFormComponent({ isEdit = false }) {
   const [busData, setBusData] = useState({
     name: "",
     terminal: "",
-    dashCamDTO: { id: "", name: "", simCard: "", imei: "", type: "" },
-    radioDTO: { name: "", imei: "", type: "" },
+    //  dashCamDTO: { id: "", name: "", simCard: "", imei: "", type: "dashcam" },
+    dashCamDTO: { type: "dashcam" },
+    //  radioDTO: { name: "", imei: "", type: "radio" },
+    radioDTO: { imei: "", type: "radio" },
     version: "",
     markedForDeletion: "",
   });

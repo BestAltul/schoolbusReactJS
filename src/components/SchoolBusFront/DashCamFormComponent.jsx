@@ -22,21 +22,19 @@ export default function DashCamFormComponent({ isEdit = false }) {
   const [simCards, setSimCards] = useState([]);
 
   const [originalDashcamData, setOriginalDashcamData] = useState({
-    id: "",
     name: "",
     drid: "",
     imei: "",
     type: "",
-    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCard: { simCardNumber: "" },
   });
 
   const [dashcam, setDashcam] = useState({
-    id: "",
     name: "",
     drid: "",
     imei: "",
     type: "dashcam",
-    simCard: { simCardType: "", simCardCarrier: "", simCardNumber: "" },
+    simCard: { simCardNumber: "" },
   });
 
   const {
@@ -108,6 +106,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
           alert("Dashcam details updated successfully!");
         }
       } else {
+        console.log("pered", dashcam);
         await axios.post(`${BASE_URL_dashcam}`, dashcam);
         alert("New dashcam added successfully!");
       }
