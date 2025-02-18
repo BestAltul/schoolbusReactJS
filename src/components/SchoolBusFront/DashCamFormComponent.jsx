@@ -8,6 +8,7 @@ import useFetchData from "../hooks/useFetchData";
 import cameraButton from "../../assets/images/camera-button.png";
 import Select from "react-select";
 import CommentsComponent from "./CommentsComponent";
+import AuditHistoryComponent from "./AuditHistoryComponent";
 
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
 const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
@@ -143,6 +144,7 @@ export default function DashCamFormComponent({ isEdit = false }) {
             <TabList>
               <Tab>DashCam Details</Tab>
               <Tab>Comments</Tab>
+              <Tab>History</Tab>
             </TabList>
             <TabPanel>
               <div className="form-group-row">
@@ -214,6 +216,12 @@ export default function DashCamFormComponent({ isEdit = false }) {
                 entityId={dashcam.drid}
                 entityType="dashCamDTO"
                 apiUrl="http://localhost:8080/api/v3/notes-management"
+              />
+            </TabPanel>
+            <TabPanel>
+              <AuditHistoryComponent
+                entityId={dashcam.drid}
+                entityType="dashcam"
               />
             </TabPanel>
           </Tabs>

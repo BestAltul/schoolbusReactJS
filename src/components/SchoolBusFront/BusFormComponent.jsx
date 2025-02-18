@@ -9,6 +9,7 @@ import useFetchData from "../hooks/useFetchData";
 import useFetchTerminals from "../hooks/useFetchTerminals";
 import schoolBusImage from "../../assets/images/schoolbus.png";
 import CommentsComponent from "./CommentsComponent";
+import AuditHistoryComponent from "./AuditHistoryComponent";
 
 const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
 const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
@@ -247,6 +248,7 @@ export default function BusFormComponent({ isEdit = false }) {
             <TabList>
               <Tab>Bus Details</Tab>
               <Tab>Comments</Tab>
+              <Tab>History</Tab>
             </TabList>
 
             <TabPanel>
@@ -385,6 +387,9 @@ export default function BusFormComponent({ isEdit = false }) {
                 entityType="schoolBus"
                 apiUrl="http://localhost:8080/api/v3/notes-management"
               />
+            </TabPanel>
+            <TabPanel>
+              <AuditHistoryComponent entityId={name} entityType="bus" />
             </TabPanel>
           </Tabs>
         </form>

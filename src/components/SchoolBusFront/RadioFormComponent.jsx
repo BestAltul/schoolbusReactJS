@@ -9,6 +9,7 @@ import radioButton from "../../assets/images/radio-button.png";
 import useFetchData from "../hooks/useFetchData";
 import Select from "react-select";
 import CommentsComponent from "./CommentsComponent";
+import AuditHistoryComponent from "./AuditHistoryComponent";
 
 const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
 const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
@@ -142,6 +143,7 @@ export default function RadioFormComponent({ isEdit = false }) {
             <TabList>
               <Tab>Radio Details</Tab>
               <Tab>Comments</Tab>
+              <Tab>History</Tab>
             </TabList>
             <TabPanel>
               <div className="form-group-row">
@@ -198,6 +200,9 @@ export default function RadioFormComponent({ isEdit = false }) {
                 entityType="radioDTO"
                 apiUrl="http://localhost:8080/api/v3/notes-management"
               />
+            </TabPanel>
+            <TabPanel>
+              <AuditHistoryComponent entityId={imei} entityType="radio" />
             </TabPanel>
           </Tabs>
         </form>
