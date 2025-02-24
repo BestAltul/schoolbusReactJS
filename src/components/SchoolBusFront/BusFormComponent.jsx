@@ -160,15 +160,19 @@ export default function BusFormComponent({ isEdit = false }) {
           });
         }
 
-        if (updatedFields.radioDTO) {
+        if (updatedFields.radioDTO && updatedFields.radioDTO.imei != null) {
           await axios.patch(`${BASE_URL}/${name}`, {
             radioDTO: { imei: updatedFields.radioDTO.imei, type: "radio" },
           });
         }
 
+        console.log("pered ", updatedFields);
         if (updatedFields.dashCamDTO) {
           await axios.patch(`${BASE_URL}/${name}`, {
-            dashCamDTO: { drid: updatedFields.dashCamDTO.id, type: "dashcam" },
+            dashCamDTO: {
+              drid: updatedFields.dashCamDTO.drid,
+              type: "dashcam",
+            },
           });
         }
         alert("Bus details updated successfully!");
@@ -389,7 +393,7 @@ export default function BusFormComponent({ isEdit = false }) {
               />
             </TabPanel>
             <TabPanel>
-              <AuditHistoryComponent entityId={name} entityType="bus" />
+              <AuditHistoryComponent entityId={name} entityType="schoolBus" />
             </TabPanel>
           </Tabs>
         </form>
