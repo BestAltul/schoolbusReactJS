@@ -38,8 +38,14 @@ const AuditHistoryComponent = ({ entityId, entityType }) => {
             <strong>Revision:</strong> {record.revisionNumber} |
             <strong> Date:</strong>{" "}
             {new Date(record.revisionDate).toLocaleString()} |
-            <strong> User:</strong> {record.revisionUser} <br />
-            <strong>Changes:</strong> {JSON.stringify(record.changes, null, 2)}
+            <strong> User:</strong> {record.revisionUser}
+            <ul>
+              {Object.entries(record.changes).map(([field, value]) => (
+                <li key={field}>
+                  <strong>{field}:</strong> {value}
+                </li>
+              ))}
+            </ul>
           </li>
         ))}
       </ul>
