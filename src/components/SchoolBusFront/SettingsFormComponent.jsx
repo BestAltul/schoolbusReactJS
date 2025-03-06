@@ -61,7 +61,10 @@ export default function SettingsFormComponent() {
       }));
 
       console.log("before sending", buses);
-      await axios.post("http://localhost:8080/api/v3/upload-management", buses);
+      await axios.post(
+        "http://192.168.21.147:8080/api/v3/upload-management",
+        buses
+      );
 
       alert("Data sent successfully!");
     } catch (err) {

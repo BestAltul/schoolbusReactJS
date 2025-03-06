@@ -9,9 +9,10 @@ import cameraButton from "../../assets/images/camera-button.png";
 import Select from "react-select";
 import CommentsComponent from "./CommentsComponent";
 import AuditHistoryComponent from "./AuditHistoryComponent";
+import { API_URLS } from "../../config/config";
 
-const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
-const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
+const BASE_URL_dashcam = API_URLS.DASHCAM;
+const BASE_URL_simcard = API_URLS.SIMCARD;
 
 export default function DashCamFormComponent({ isEdit = false }) {
   const { drid } = useParams();
@@ -215,7 +216,8 @@ export default function DashCamFormComponent({ isEdit = false }) {
               <CommentsComponent
                 entityId={dashcam.drid}
                 entityType="dashCamDTO"
-                apiUrl="http://localhost:8080/api/v3/notes-management"
+                // apiUrl="http://localhost:8080/api/v3/notes-management"
+                apiUrl="http://192.168.21.147:8080/api/v3/notes-management"
               />
             </TabPanel>
             <TabPanel>

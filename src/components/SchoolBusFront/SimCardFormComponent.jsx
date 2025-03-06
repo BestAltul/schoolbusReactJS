@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchSimCardByNumber from "../hooks/useFetchSimCardByNumber";
 import simcardButton from "../../assets/images/simcard-button.png";
+import { API_URLS } from "../../config/config";
 
-const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
+const BASE_URL_simcard = API_URLS.SIMCARD;
 
 export default function SimCardFormComponent({ isEdit = false }) {
   const { simCardNumber } = useParams();

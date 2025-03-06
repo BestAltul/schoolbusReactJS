@@ -10,10 +10,12 @@ import useFetchTerminals from "../hooks/useFetchTerminals";
 import schoolBusImage from "../../assets/images/schoolbus.png";
 import CommentsComponent from "./CommentsComponent";
 import AuditHistoryComponent from "./AuditHistoryComponent";
+import { API_URLS } from "../../config/config";
 
-const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
-const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
-const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
+//const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
+const BASE_URL = API_URLS.SCHOOLBUS;
+const BASE_URL_dashcam = API_URLS.DASHCAM;
+const BASE_URL_radio = API_URLS.RADIO;
 
 export default function BusFormComponent({ isEdit = false }) {
   const { name } = useParams();
@@ -389,7 +391,7 @@ export default function BusFormComponent({ isEdit = false }) {
               <CommentsComponent
                 entityId={name}
                 entityType="schoolBus"
-                apiUrl="http://localhost:8080/api/v3/notes-management"
+                apiUrl="http://192.168.21.47:8080/api/v3/notes-management"
               />
             </TabPanel>
             <TabPanel>

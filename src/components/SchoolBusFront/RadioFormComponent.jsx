@@ -10,9 +10,10 @@ import useFetchData from "../hooks/useFetchData";
 import Select from "react-select";
 import CommentsComponent from "./CommentsComponent";
 import AuditHistoryComponent from "./AuditHistoryComponent";
+import { API_URLS } from "../../config/config";
 
-const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
-const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
+const BASE_URL_radio = API_URLS.RADIO;
+const BASE_URL_simcard = API_URLS.SIMCARD;
 
 export default function RadioFormComponent({ isEdit = false }) {
   const [formTitle, setFormTitle] = useState(

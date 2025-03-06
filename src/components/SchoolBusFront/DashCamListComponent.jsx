@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import useFetch from "../hooks/useFetchData";
 import axios from "axios";
+import { API_URLS } from "../../config/config";
 
-const BASE_URL_dashcam = "http://localhost:8080/api/v3/dashcam-management";
+const BASE_URL_dashcam = API_URLS.DASHCAM;
 
 export default function DashCameraComponent() {
   const [selectedDashcam, setSelectedDashcam] = useState(null);
@@ -14,7 +15,7 @@ export default function DashCameraComponent() {
   const navigate = useNavigate();
 
   const handleSearchDashcams = (query) => {
-    if (!dashCameras || dashCameras.length === 0) return; // Проверка наличия данных
+    if (!dashCameras || dashCameras.length === 0) return;
 
     if (query) {
       const lowerCaseQuery = query.toLowerCase();

@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SchoolBus.css";
 import SearchBar from "./SearchBar";
+import { API_URLS } from "../../config/config";
 
-const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
+//const BASE_URL = "http://localhost:8080/api/v3/schoolbus-management";
+const BASE_URL = API_URLS.SCHOOLBUS;
 
 export default function BusListComponent() {
   // const today = new Date();
@@ -26,9 +28,7 @@ export default function BusListComponent() {
 
   const fetchBusList = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v3/schoolbus-management"
-      );
+      const response = await axios.get(BASE_URL);
       setBusList(response.data);
       setLoading(false);
       setFilteredBusList(response.data);

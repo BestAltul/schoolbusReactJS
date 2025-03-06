@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URLS } from "../../config/config";
 
 const AuditHistoryComponent = ({ entityId, entityType }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const BASE_URL_AUDIT = `http://localhost:8080/api/v3/audit-management`;
+  //const BASE_URL_AUDIT = `http://localhost:8080/api/v3/audit-management`;
+  const BASE_URL_AUDIT = API_URLS.AUDIT_HISTORY;
 
   useEffect(() => {
     const fetchHistory = async () => {

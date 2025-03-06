@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SchoolBus.css";
 import SearchBar from "./SearchBar";
+import { API_URLS } from "../../config/config";
 
-const BASE_URL_simcard = "http://localhost:8080/api/v3/simcards-management";
+const BASE_URL_simcard = API_URLS.SIMCARD;
 
 export default function SimCardListComponent() {
   const [selectedSimCard, setSelectedSimCard] = useState(null);
