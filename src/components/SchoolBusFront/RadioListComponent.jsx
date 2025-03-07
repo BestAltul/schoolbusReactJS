@@ -5,7 +5,6 @@ import SearchBar from "./SearchBar";
 import "./SchoolBus.css";
 import { API_URLS } from "../../config/config";
 
-//const BASE_URL_radio = "http://localhost:8080/api/v3/radios-management";
 const BASE_URL_radio = API_URLS.RADIO;
 
 export default function RadioListComponent() {

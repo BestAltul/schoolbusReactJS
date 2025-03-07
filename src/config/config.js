@@ -6,4 +6,5 @@ export const API_URLS = {
   SCHOOLBUS: `${BASE_URL}/schoolbus-management`,
   AUDIT_HISTORY: `${BASE_URL}/audit-management`,
   RADIO: `${BASE_URL}/radios-management`,
+  ROUTE: `${BASE_URL}/route-management`,
 };
